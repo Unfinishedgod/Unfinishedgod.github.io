@@ -1,0 +1,340 @@
+---
+title: 대한민국 코로나 바이러스 현황 파악
+output: 
+  html_document:
+    theme: default  
+    highlight: textmate
+    toc: true
+    toc_float: true
+    code_folding: hide
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center")
+```
+
+#### Author: 최의용
+#### Github Code: <a href ="https://github.com/Unfinishedgod/record_Rcode/blob/master/corona.Rmd"target="_blank">Unfinishedgod</a>
+
+<br>
+
+<p align="center">
+![](https://i.guim.co.uk/img/media/5bfbe142eebc4a6e702621fddeaac601c2c730c6/0_59_3060_1836/master/3060.jpg?width=620&quality=85&auto=format&fit=max&s=fa80f7261c25334949022dcdb1b812dc)
+</p> <br> 
+
+
+
+# 코로나바이러스감염증-19 (COVID-19)
+
+**정의**: 2019년 12월 중국 우한에서 처음 발생한 뒤 전 세계로 확산된, 새로운 유형의 코로나바이러스(SARS-CoV-2)에 의한 호흡기 감염질환이다. 코로나바이러스감염증-19는 감염자의 비말(침방울)이 호흡기나 눈·코·입의 점막으로 침투될 때 전염된다. 감염되면 약 2~14일(추정)의 잠복기를 거친 뒤 발열(37.5도) 및 기침이나 호흡곤란 등 호흡기 증상, 폐렴이 주증상으로 나타나지만 무증상 감염 사례도 드물게 나오고 있다. <br>
+
+**[네이버 지식백과] 코로나바이러스감염증-19 - COVID-19 (시사상식사전, pmg 지식엔진연구소)**
+
+<br>
+
+# 대한민국 인구/코로나 바이러스 확진자 현황
+
+2020년 3월 5일. 지난 12월 부터 대한민국은 코로나 바이러스로 인해 많은 공포를 느끼고 있다. 처음에는 잠깐의 헤프닝으로 여겼던 현상이, 대구/경북에서 확진자가 폭등 하는 바람에 대한민국을 공포로 물들인게 아닌가 싶다. 나 역시, 한동안 주말에는 계속 집에서 외출은 최소화 하면서 지내고 있는데, 문득 **의문**이 생겨 글을 쓴다. 동시에 이번에 gganimate, ggmap을 배우는 좋은 계기가 되었다. 
+
+<br>
+
+### 내가 바라본 코로나 바이러스
+
+<br>
+
+<p align="center">
+  ![](https://movie-phinf.pstatic.net/20160427_89/1461745425954VryfI_JPEG/movie_image.jpg?type=m427_320_2)<br>
+</p>
+
+<br>
+
+정말, 정말 이정도까지 생각을 하고 있었다. 정말 무서웠으며 집에만 있었었다. 그러다 문득 부산행이며 다른 좀비영화에 나오는 수준의 위험한 정도 일까? 라는 생각이 문득 들었었다. 상당히 위험한 발언일 수 있는데, 결론적으로 내가 스스로 생각 하고 있는것은, 
+
+<p align="center">
+**현 시기에는 많은 경각심을 가져야 한다.** <br>
+**다만, 적어도 심각한 공포가 아니라 심각한 경계라는 생각을 하는게 좋아 보인다.**
+</p>
+
+어느덧 대한민국 확진자가 3700명을 넘어섰다. 3700명. 많다면 많을 수는 있는 숫자. 그러나 꼬리표처럼 붙어 나오는 키워드가 대구/경북에서 3000명. **나는 여기에 초점을 맞추어 글을 써보려 한다.**
+
+<br>
+
+## 시도별 인구/ 확진자 현황
+
+먼저 시도별 인구와 확진자 현황을 보도록 하자. 시도별 인구는 KOSIS[^1]에서 2020년 2월 기준으로 가져왔으며, 코로나 확진자 데이터[^2] 는 박찬엽님의 링크를 사용하였다. 시도별 인구와 확진자 인구를 보면 인구는 서울/경기도에, 확진자는 대구/경북에 몰려 있는것을 확인할 수 있었다. 이를 각각 지도에 시각화 하여 확인해보자.
+
+```{r}
+library(stringi)
+library(kormaps2014)
+library(tidyverse)
+library(googledrive)
+library(mapproj)
+library(ggiraphExtra)
+library(data.table)
+library(readxl)
+library(patchwork)
+library(gridExtra)
+library(maps)
+library(ggthemes)
+library(gganimate)
+library(httr)
+library(jsonlite)
+library(lubridate)
+library(scales)
+library(DT)
+
+theme_set(theme_bw())
+
+## 대한민국 인구 데이터 추출
+population <- read_xls("population_x.xls")
+
+population <- population[,c(1,8)]
+
+colnames(population) <- c("행정구역별_읍면동", "총인구수")
+
+population <- population[-c(1:2),]
+
+korpop2020 <- korpop1 %>% 
+  left_join(population) %>% 
+  select(C행정구역별_읍면동, 행정구역별_읍면동, 시점, C행정구역별, code, 총인구수) %>% 
+  rename(pop2020 = 총인구수, name = 행정구역별_읍면동)
+
+korpop2020$시점 <- 2020
+korpop2020$pop2020 <- as.numeric(korpop2020$pop2020)
+
+# 코로나 데이터 추출
+corona_0301 <- read_xlsx("corona19_kr_20200301.xlsx")
+
+corona_0301 <- corona_0301 %>% 
+  select(구분, `확진환자 (명)`) %>% 
+  filter(!구분 %in% c(NA,"합계", "검역"))
+
+
+colnames(tbc)[1] <- "구분"
+
+tbc_unique <- tbc %>% 
+  select(구분, name) %>% 
+  unique() 
+
+corona_0301 <- corona_0301 %>% 
+  left_join(tbc_unique) %>% 
+  select(name, `확진환자 (명)`)
+
+kor_pop_corona <- korpop2020 %>% 
+  left_join(corona_0301) %>% 
+  rename(pop_corona = `확진환자 (명)`)
+
+kor_pop_corona$pop_corona <- as.numeric(kor_pop_corona$pop_corona)
+
+kor_pop_corona %>% 
+  rename(총인구수 = pop2020, 확진자 = pop_corona, 행정구역 = name) %>% 
+  select(시점,총인구수,  확진자, 행정구역) %>% 
+  datatable(rownames = FALSE)
+```
+
+<br>
+
+## 시도별 인구 현황 지도
+
+먼저, 시도별 인구 현황 지도를 확인해보자. 시각화 참고는 Do it! 쉽게 배우는 R 데이터 분석 Github과, Kormaps 패키지를 이용한 단계구분도 쉽게 그리기[^3]를 참고 했다. 경기도와 서울에 짙은것을 보면 인구가 밀집 되었음을 확인할 수 있엇다.
+
+```{r}
+ggChoropleth(data = korpop2020,      # 지도에 표현할 데이터
+             aes(fill = pop2020,      # 색깔로 표현할 변수
+                 map_id = code,   # 지역 기준 변수
+                 tooltip = name), # 지도 위에 표시할 지역명
+             map = kormap1,       # 지도 데이터
+             interactive = T)
+```
+
+<br>
+
+## 시도별 코로나 확진자 지도
+
+이번에는 시도별 코로나 확진자 지도를 보자. 대구와 경북에 많이 짙은것을 볼 수 있다.
+
+```{r}
+ggChoropleth(data = kor_pop_corona,      # 지도에 표현할 데이터
+             aes(fill = pop_corona,      # 색깔로 표현할 변수
+                 map_id = code,   # 지역 기준 변수
+                 tooltip = name), # 지도 위에 표시할 지역명
+             map = kormap1,       # 지도 데이터
+             interactive = T)
+
+```
+
+<br>
+
+## 코로나 버블 차트
+
+지도를 다른 방법으로 보자. 원래는 이 링크에 나와 있는 것처럼 gganimate를 사용해 움직이는 버블차트를 만들어 보려 했으나[^4], 여러번의 시행착오를 겪어도 할 수가 없었다. 일단 map에 대해 좀 더 공부를 해봐야 겠다. 이 링크대로라면 지역별로 위/경도를 뽑아야 하는데, 이는 xwMOOC의 지리정보 API를 사용한 주소와 위도경도 추출방법을[^5] 참고 하였다.
+
+- [How to plot animated maps with gganimate](https://d4tagirl.com/2017/05/how-to-plot-animated-maps-with-gganimate)
+
+```{r}
+korea <- map_data("world", region = c("South Korea"))
+
+# 지리정보 API를 사용한 위경도 추출
+Lat_lon_fun <- function(addr) {
+  data_list <-
+    GET(url = 'https://dapi.kakao.com/v2/local/search/address.json',
+        query = list(query = addr),
+        add_headers(Authorization = paste0("KakaoAK ", "2ecacbafd523802f293b245103346b06"))) %>% 
+    content(as = 'text') %>% 
+    fromJSON()
+  
+  
+  lon_lat_df <- data.frame(location = addr, long = data_list$documents$x, lat = data_list$documents$y)
+  
+  return(lon_lat_df)
+}
+
+
+location_list <- corona_0301$name
+
+location_long_lat <- map_dfr(location_list, function(x) {
+  Lat_lon_fun(x)
+})
+
+corona_0301_bubble <- cbind(corona_0301, location_long_lat[,-1]) %>% 
+  rename(pop = `확진환자 (명)`)
+
+corona_0301_bubble$pop <- as.numeric(corona_0301_bubble$pop)
+corona_0301_bubble$long <- as.numeric(corona_0301_bubble$long)
+corona_0301_bubble$lat <- as.numeric(corona_0301_bubble$lat)
+
+
+
+ggplot() + 
+  geom_polygon(data=korea, aes(x=long, y=lat, group=group), fill="grey", alpha= 0.3) +
+  geom_point(data=corona_0301_bubble, aes(x=long, y=lat, size = pop), shape = 20, color = "red", alpha = 0.4) +
+  scale_size_area(max_size=20) +
+  theme_void() +
+  geom_text(data=corona_0301_bubble, aes(x=long+0.2, y=lat+0.2, label=name))
+```
+
+<br>
+
+## GGanimate를 사용한 지역별 날짜별 확진자 그래프
+
+다음 그림을 보자. gganimate[^6]를 사용하였으며, 코로나가 어떻게 대한민국을 공포로 몰아넣게 했는지 그래프로 확인해 볼 수 있었다. 다른 지역에 비해 대구와 경북의 그래프가 가빠르게 올라가는것을 확인할 수 있었다. 날짜는 2020-02-26 ~ 2020-03-01까지 밖에 없었다.
+
+```{r fig.height=10, fig.width=10}
+corona_flow <- read_xlsx("corona19-kr.xlsx")
+
+corona_flow_2 <- corona_flow %>%
+  filter(location != "검역" & state1 == "확진") %>%
+  rename(Day = "datetime(kst)") %>%
+  group_by(Day, location, state1) %>%
+  summarise(count = sum(count))
+
+datebreaks <- seq(as.Date(head(corona_flow_2$Day,1)), as.Date(tail(corona_flow_2$Day,1)), by="1 day")
+
+
+p <- corona_flow_2 %>%
+  ggplot(aes(Day, count, group = location, color = factor(location))) +
+  geom_line() +
+  scale_color_viridis_d() +
+  labs(x = "", y = "") +
+  theme(axis.text.x = element_text(angle=30, hjust=1)) +
+  theme(legend.position = "none")
+
+p + facet_wrap(~location, ncol=4)+
+  geom_point() +
+  geom_text( aes(y = count+1,label=paste0(location, " (",count,"명)")), size=3, vjust=1, hjust=1.1) +
+  transition_reveal(Day)
+```
+
+<br>
+
+## 비교 그래프
+
+이번에는 막대그래프로 확인을 해보자. 내가 가장 눈으로 보고 싶었던 그래프다. 이 그래프를 보면 **상대적**의 개념을 한눈에 알아 볼 수 있다. 대한민국에서 3700명과 지역별로 나누었을때의 확진자 수를 볼 수 있다.
+
+```{r fig.height=9, fig.width=10}
+kor_pop_corona_2 <- kor_pop_corona %>% 
+  gather(key = "case", value = "pops", `pop2020`,`pop_corona`)
+
+
+p1 <- ggplot(data = kor_pop_corona) +
+  geom_col(aes(x = name, y = pop2020, fill = pop2020)) +
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(size = 10, angle=30, hjust=1)) +
+  labs(title = "시도별 인구(2020년 기준)", x = "지역(시도)", y = "", colors = "인구")
+  
+p2 <- ggplot(data = kor_pop_corona) +
+  geom_col(aes(x = name, y = pop_corona, fill = pop_corona)) +
+  theme(axis.text.x = element_text(size = 10, angle=30, hjust=1)) +
+  labs(title = "시도별 코로나 확진 환자", x = "지역(시도)", y = "", colors = "인구")
+  
+p1 / p2
+```
+
+<br>
+
+## 지역대비 확진자 파악
+
+점점 결론으로 나아가고 있다. 이번에는 지역대비 확진자의 비율을 파악해보자. 각각 대구와 경북이 0.1112%, 0.0209%이고 그외 지역은 상대적으로 확진자가 낮은것을 볼 수 있다. 다시 말하지만, 
+
+<p align="center">
+**현 시기에는 많은 경각심을 가져야 한다.** <br>
+**다만, 적어도 심각한 공포까진 아니지만 경각심과 공포 그 사이정도** <br>
+**아, 대구/경북 주민은 정말 조심**
+</p>
+
+
+```{r}
+kor_pop_corona %>% 
+  mutate(
+    `지역대비 확진자` = paste0(pop_corona , " / ", pop2020),
+    `지역대비 확진자 비율` = paste0(format(round(pop_corona / pop2020 * 100, 4), scientific = FALSE),"%")) %>% 
+  rename(총인구수 = pop2020, 확진자 = pop_corona, 행정구역 = name) %>% 
+  select(시점,총인구수, 확진자, `지역대비 확진자`, `지역대비 확진자 비율`,행정구역) %>% 
+  datatable(rownames = FALSE)
+```
+
+# 총평
+
+사실 코로나의 공포에 휩쌓여, 이미 나는 경각심 보다는 거의 공포에 가까운 수준으로 느끼고 있다. '이러면 어쩌나, 저러면 어쩌나, 만약 내가 걸리면 어쩌나.. 등등' 그러나 애써서 공포를 줄여보고 이성적으로 현 사태를 파악해보고자 이렇게 글을 쓰게되었다. 덕분에 gganimate, ggmap을 공부 하는 좋은 계기가 되었다.
+
+<br> 
+<br>
+
+<p align="center">
+
+<font size="5em" color="blue">
+**그래도 다들 조심하시고,** <br>
+**마스크 착용하시고,** <br>
+**손소독 필수,** <br>
+**그리고 사람 많은곳은 피하자구요** <br>
+</font>
+</p>
+
+<br>
+
+
+# 참고
+
+[^1]: 행정구역별 인구 데이터   <br>
+  - <a href ="http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B040A3&vw_cd=&list_id=&scrId=&seqNo=&lang_mode=ko&obj_var_id=&itm_id=&conn_path=E1"target="_blank">KOSIS-행정구역(시군구)별, 성별 인구수</a>
+
+[^2]: 코로나 데이터 (시도별, 날짜별(2020-02-26~2020-03-01)) <br>
+- <a href ="https://drive.google.com/drive/folders/1_bjm76OE2H2xluT0D3hScUjvON9DpWXr?fbclid=IwAR2vMDfXFmwqQ8rqZd9MZ2pWJLW02Fczu0o5IZRho66ctypMaT9ppz0YkdY"target="_blank">코로나 데이터</a>  
+
+[^3]: Kormaps 패키지를 사용한 대한민국 시각화 <br>
+- <a href ="https://github.com/youngwoos/Doit_R/#91"target="_blank">Do it! 쉽게 배우는 R 데이터 분석 Github</a> <br>
+- <a href ="http://web-r.org/webrboard/6477"target="_blank">Kormaps 패키지를 이용한 단계구분도 쉽게 그리기(1)</a> <br>
+- <a href ="https://rstudio-pubs-static.s3.amazonaws.com/159305_23b365c6973b45d3b14f2a6adc1c71af.html"target="_blank">Kormaps 패키지를 이용한 단계구분도 쉽게 그리기(2)</a> <br>
+
+[^4]: gganimate & ggmap <br>
+- <a href ="https://d4tagirl.com/2017/05/how-to-plot-animated-maps-with-gganimate"target="_blank">gganimate_map_rpubs</a> <br>
+- <a href ="https://geocompr.robinlovelace.net/adv-map.html#animated-maps"target="_blank">Geocomputation with R</a> <br>
+    
+[^5]: 지리정보 API를 사용한 주소와 위도경도 추출 <br>
+- <a href ="https://statkclee.github.io/spatial/geo-info-lonlat.html"target="_blank">공간통계를 위한 데이터 사이언스</a> <br>
+  
+[^6]: gganimate <br>
+- <a href ="https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/"target="_blank">gganimate_exam</a> <br>
+- <a href ="https://github.com/thomasp85/gganimate"target="_blank">gganimate_github</a> <br>
+- <a href ="https://gganimate.com/reference/index.html"target="_blank">gganimate_tutorial</a> <br>
