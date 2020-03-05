@@ -106,8 +106,12 @@ korpop2020$pop2020 <- as.numeric(korpop2020$pop2020)
 # 코로나 데이터 추출
 corona_0301 <- read_xlsx("corona19_kr_20200301.xlsx")
 
+corona_0301 %>% 
+  select(구분, `확진환자 (명)`,`검사현황 (명)`) %>% 
+  filter(!구분 %in% c(NA,"합계", "검역"))
+
 corona_0301 <- corona_0301 %>% 
-  select(구분, `확진환자 (명)`) %>% 
+  select(구분, `확진환자 (명)`,`검사현황 (명)`) %>% 
   filter(!구분 %in% c(NA,"합계", "검역"))
 
 
@@ -119,13 +123,14 @@ tbc_unique <- tbc %>%
 
 corona_0301 <- corona_0301 %>% 
   left_join(tbc_unique) %>% 
-  select(name, `확진환자 (명)`)
+  select(name, `확진환자 (명)`,`검사현황 (명)`)
 
 kor_pop_corona <- korpop2020 %>% 
   left_join(corona_0301) %>% 
   rename(pop_corona = `확진환자 (명)`)
 
 kor_pop_corona$pop_corona <- as.numeric(kor_pop_corona$pop_corona)
+kor_pop_corona$`검사현황 (명)` <- as.numeric(kor_pop_corona$`검사현황 (명)`)
 
 kor_pop_corona %>% 
   rename(총인구수 = pop2020, 확진자 = pop_corona, 행정구역 = name) %>% 
@@ -256,19 +261,23 @@ p + facet_wrap(~location, ncol=4)+
 kor_pop_corona_2 <- kor_pop_corona %>% 
   gather(key = "case", value = "pops", `pop2020`,`pop_corona`)
 
-
 p1 <- ggplot(data = kor_pop_corona) +
   geom_col(aes(x = name, y = pop2020, fill = pop2020)) +
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_text(size = 10, angle=30, hjust=1)) +
-  labs(title = "시도별 인구(2020년 기준)", x = "지역(시도)", y = "", colors = "인구")
-  
+  labs(title = "시도별 인구(2020년 기준)", x = "지역(시도)", y = "", fill = "인구")
+
 p2 <- ggplot(data = kor_pop_corona) +
+  geom_col(aes(x = name, y = `검사현황 (명)`, fill = `검사현황 (명)`)) +
+  theme(axis.text.x = element_text(size = 10, angle=30, hjust=1)) +
+  labs(title = "시도별 코로나 검사자", x = "지역(시도)", y = "", fill = "검사자")
+
+p3 <- ggplot(data = kor_pop_corona) +
   geom_col(aes(x = name, y = pop_corona, fill = pop_corona)) +
   theme(axis.text.x = element_text(size = 10, angle=30, hjust=1)) +
-  labs(title = "시도별 코로나 확진 환자", x = "지역(시도)", y = "", colors = "인구")
+  labs(title = "시도별 코로나 확진자", x = "지역(시도)", y = "", fill = "확진자")
   
-p1 / p2
+p1 / p2 / p3
 ```
 
 <br>
@@ -288,9 +297,11 @@ p1 / p2
 kor_pop_corona %>% 
   mutate(
     `지역대비 확진자` = paste0(pop_corona , " / ", pop2020),
-    `지역대비 확진자 비율` = paste0(format(round(pop_corona / pop2020 * 100, 4), scientific = FALSE),"%")) %>% 
+    ` 확진자 비율` = paste0(format(round(pop_corona / pop2020 * 100, 4), scientific = FALSE),"%"),
+    `지역대비 검사자` = paste0(`검사현황 (명)` , " / ", pop2020),
+    ` 검사자 비율` = paste0(format(round(`검사현황 (명)` / pop2020 * 100, 4), scientific = FALSE),"%")) %>% 
   rename(총인구수 = pop2020, 확진자 = pop_corona, 행정구역 = name) %>% 
-  select(시점,총인구수, 확진자, `지역대비 확진자`, `지역대비 확진자 비율`,행정구역) %>% 
+  select(시점,총인구수,`검사현황 (명)`,`지역대비 검사자`,  ` 검사자 비율`, 확진자, `지역대비 확진자`, ` 확진자 비율`,행정구역) %>% 
   datatable(rownames = FALSE)
 ```
 
