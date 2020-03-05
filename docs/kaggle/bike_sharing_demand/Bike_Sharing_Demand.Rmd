@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,fig.width=11, fi
 ```
 
 <p align="center">
-  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/3948/media/bikes.png"><br>
+  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/3948/media/bikes.png"> <br>
   <b>Kaggle: [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand/overview)</b> <br>
   <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Kaggle/blob/master/Bike_Sharing_Demand/Bike_Sharing_Demand.Rmd)</b><br>
 </p>
