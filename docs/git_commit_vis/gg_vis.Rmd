@@ -1,0 +1,84 @@
+---
+title: "Comit Graph"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, message=FALSE}
+library(rvest)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(gganimate)
+
+git_url <- "https://github.com/Unfinishedgod"
+
+
+git_info <- git_url %>%  
+  read_html() %>%
+  html_nodes(".border.border-gray-dark.py-2.graph-before-activity-overview") %>%
+  html_nodes(".js-calendar-graph.mx-3.d-flex.flex-column.flex-items-end.flex-xl-items-center.overflow-hidden.pt-1.is-graph-loading.graph-canvas.calendar-graph.height-full.text-center") %>% 
+  html_nodes("g") %>% 
+  html_nodes("rect")
+
+
+commit_date <- git_info %>% 
+  html_attr("data-date") %>% 
+  as.Date()
+
+commit_count <- git_info %>% 
+  html_attr("data-count") %>% 
+  as.numeric()
+
+fill <- git_info %>% 
+  html_attr("fill") 
+
+
+commit_info <- data.frame(commit_date,commit_count,fill) %>% 
+  mutate(level = case_when(
+    fill == unique(fill)[1] ~ "E",
+    fill == unique(fill)[2] ~ "D",
+    fill == unique(fill)[3] ~ "C",
+    fill == unique(fill)[4] ~ "B",
+    TRUE ~ "A"
+  ))
+
+
+####
+
+uniform_date <- 80
+
+commit_df <- tail(commit_info,uniform_date)
+
+rownames(commit_df) <- NULL
+
+# ggplot
+ggplot_data <-ggplot(data = commit_df, aes(x=commit_df$commit_date,y=commit_df$commit_count,fill=commit_df$level)) +
+  ggtitle(paste0("최근 커밋수: ", uniform_date)) +
+  # geom_line(stat = "identity") +
+  geom_col() +
+  scale_fill_manual(values = levels(commit_info$fill)) +
+  theme_bw() +
+  labs(x="Date", y="Commit count")
+```
+
+### 최근 `r uniform_date`일간의 커밋 그래프 
+
+```{r echo=FALSE} 
+ggplotly(ggplot_data, height = 500, width = 1000)
+```
+
+<br> 
+
+### 최근 `r uniform_date`일간의 커밋 테이블 
+
+```{r echo=FALSE}
+tail(commit_info,uniform_date) %>% 
+  select(commit_date, commit_count) %>% 
+  datatable()
+```
+
