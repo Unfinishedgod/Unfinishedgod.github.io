@@ -1,0 +1,275 @@
+---
+title: "ggplot 3.3.0 버전 업"
+author: "최의용"
+date: '2020 3 10 '
+output: 
+  html_document:
+    highlight: textmate
+    theme: default
+    toc: true
+    toc_float: true
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+```
+
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png" width="200" height="200"><br>
+  <b>출처: [Tidyverse-ggplot2 3.3.0](https://www.tidyverse.org/blog/2020/03/ggplot2-3-3-0/)</b><br>
+</p>
+
+# ggplot2 3.3.0
+
+ggplot2 가 2020년 3월 5일에 3.3.0으로 업데이트가 되었다. ggplot을 조금 쓰고 있기는 하다만 막상 ggplot전체중 얼마나 쓰고 있냐고 물어보면 5%수준 정도도 안되는 사용향에 이번에 한번, 관심을 가져보고자 포스팅을 해보려 한다. 패키지가 업데이트 되어 install.packages("ggplot2") 로 재설치 하면 됬으나, Mac의 경우에는 remove.packages("ggplot2")를 진행하고 설치를 다시 했어야 하더라. 그럼 이제 하나씩 추가된 기능을 소개해보도록 하겠다.
+
+
+
+# X축, Y축의 라벨 겸칩에서 해방 
+기존 x축을 표현할때 텍스트가 길어지면 겹쳐서, 어쩔수 없이 각도에 변화룰 주어야 했었따. 그러나 이번에 추가된 기능으로는 guide_axis()가 생겼다. 
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+p <- ggplot(mpg) +
+  geom_bar(aes(x = manufacturer)) + 
+  theme(axis.text.x = element_text(size = 11))
+
+# Overlapping labels
+plot(p)
+```
+
+### x축의 겹치는 문제 해결
+ 
+기존 코드에 **scale_x_discrete(guide = guide_axis(n.dodge = 2))**를 추가 해주어 x축의 겹침을 해결 할 수 있다.
+
+```{r}
+# Use guide_axis to dodge the labels
+p + 
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
+```
+
+### 겹치는 x축 제거
+
+또는 **scale_x_discrete(guide = guide_axis(check.overlap = TRUE))** 코드를 사용하여 겹치는 부분을 제거 할 수 있다.
+
+```{r}
+# Or to remove overlapping labels
+p + 
+  scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
+```
+
+
+# 새로운 bin scale
+
+기존에 ggplot에서 점들을 표현하는데 있어 버블로 표현하는 기능이 있었다. 그러나 이번에 새로 scale에 bin이라는 것이 추가 되어 쉽게 표현을 할 수 있게 되었다. (기존 ggplot scale에는 연속, 이산형 scale만 존재 했었다.)
+
+```{r}
+p <- ggplot(mpg) + 
+  geom_point(aes(displ, cty, size = hwy, colour = hwy))
+```
+
+
+### 연속형 데이터를 크기로 구분 짓기 
+
+**scale_size_binned()**를 사용하면서 연속형데이터인 hwy에 대해 단계적으로 구분을 지어 크기로 표현을 할 수가 있다.
+
+```{r}
+p + 
+  scale_size_binned()
+```
+
+### 연속형 데이터를 색으로 구분 짓기
+
+**scale_colour_binned()**를 사용하면서 연속형으로 표현하는 hwy (파란색 label)을 구분 지어줄 수 있다.
+
+```{r}
+p + 
+  scale_colour_binned()
+```
+
+### scale_size_binned
+
+잘 이해가 가지 않지만, scale_size_binned에 limit을 걸어 표시 해주는건가 보다. 
+  
+```{r}
+p + 
+  scale_size_binned(guide = guide_bins(show.limits = TRUE))
+```
+  
+### 연속형 데이터를 x축 방향으로 정렬시킴
+
+**scale_x_binned()**는 x축방향으로 정렬시켜 막대플롯을 연상시키듯 사용할 수가 있다.
+  
+```{r}
+p + 
+  scale_x_binned()
+```
+  
+#### scale_x_binned과 막대그래프 표현
+
+scale_x_binned과 막대그래프를 동시에 사용한 모습이다.
+  
+```{r}
+ggplot(mpg) + 
+  geom_bar(aes(displ)) + 
+  scale_x_binned()
+```
+  
+  
+  
+# 방향 설정에서의 자유로움 (goord_flip()의 대안)
+
+기존에 ggplot2에서 x축과 y축을 바꾸려면 coord_flip()를 사용해야 했으며, 당시에 나에게는 이것조차 새로운 세계였다. 그러나 이제는 이를 좀 더 직관적으로 사용할 수가 있게 되었다.
+
+```{r}
+ggplot(mpg) + 
+  geom_bar(aes(x = manufacturer)) + 
+  coord_flip()
+```
+
+### default로 y만 선택이 가능하다
+
+ggplot의 특성상 default에 x가 들어가야 했던것이 y로 지정해주어 가로에서부터 표현을 할 수 있게 해주었다. (그러나 음... 막상 이기능은 직관적이지 못하다는 인상을 줄 수 있을것 같다. 늘 그렇듯이 dafault는 x라는 생각을 하기 때문인가 보다.)
+
+```{r}
+ggplot(mpg) + 
+  geom_bar(aes(y = manufacturer))
+```
+
+### geom_smooth 역시 y관점에서 설정이 가능하다
+
+geom_smooth의 y버전이다. xy대칭의 관점에서 보면 좋을것 같다. 이번 방향 관련해서의 업데이트는 하나의 도전일 수도 있지 않을까 하는 생각이 들기도 하다. 우리 모드는 xy평면에 세뇌를 당해 살아온 것이 15년이 넘을텐데, 이 자연스러움을 깨는건 쉽지 않을수 있다.
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth(orientation = "y")
+```
+
+
+# 좀더 심미적인 그래프
+
+사실, 아까도 말했지만 ggplot의 5%남짓 밖에 사용하지 못하는 나에게도 충분히 이쁜 그래프를 표현할 수 있다고 생각 했었다. 글머에도 이번에 그래프를 그리는데에 있어, 조금더 이쁜 표현을 설정할 수 있는 기능을 추가 해주었다.
+
+```{r}
+ggplot(mpg, aes(displ)) +
+  geom_histogram(aes(y = after_stat(density)))
+```
+
+### 내부를 색으로 채우는 코드 
+
+**after_scale()**코드를 사용하여 내부를 색으로 표현이 가능하다.
+
+```{r}
+ggplot(mpg, aes(class, hwy)) +
+  geom_boxplot(aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
+```
+
+### 다각형의 조건적인 표현
+
+**stage()** 기능을 사용하여 다각형의 내부외부를 컨트롤할 수 있다. 이 기능은 조만간 이쁘게 표현을 할 일이 있을거 같다.
+
+```{r}
+ggplot(mpg) + 
+  geom_bar(
+    aes(
+      x = drv, 
+      colour = stage(start = drv, after_scale = alpha(colour, 0.5))
+    ), 
+    fill = NA, size = 4
+  )
+```
+
+# 자유롭게 확장 가능한 테마
+
+이 부분은 아직 테마 설정에 대해서 나 역시 자유롭지 못하기에 제대로 이해를 할 수가 없었다. 
+
+```{r}
+register_theme_elements(
+  ggrelfacet.panel.arrow = element_line(
+    size = 3, arrow = arrow()
+  ),
+  element_tree = list(
+    ggrelfacet.panel.arrow = el_def("element_line", "line")
+  )
+)
+```
+
+
+# 더 나아진 윤곽 계산
+
+### Step 1. 
+윤곽을 계산하는데 있어 보다 선명한 표현을 할 수 있게 되었다. 다음 그림을 보자. 등고선을 표현하려고 하는데 직관적이지도 뚜렷하지도 않다. 
+
+```{r}
+volcano_long <- data.frame(
+  x = as.vector(col(volcano)),
+  y = as.vector(row(volcano)),
+  z = as.vector(volcano)
+)
+
+ggplot(volcano_long, aes(x, y, z = z)) + 
+  geom_polygon(aes(fill = stat(level)), alpha = 0.5, stat = "contour") + 
+  guides(fill = "legend")
+```
+
+### Step 2. 
+**geom_contour_filled()** 함수를 사용하여 조금 더 선명한 표현을 할 수 있었다.
+
+```{r}
+ggplot(volcano_long, aes(x, y, z = z)) + 
+  geom_contour_filled(aes(fill = stat(level)), alpha = 0.5)
+```
+
+### Step 3.
+
+이번에 이 모든 문제가 해결되었다. 위 그림과 다른점은 범례를 표현하는데, 연속적인 표현을 이산화 해서 표현을 하였다.
+
+```{r}
+ggplot(volcano_long, aes(x, y, z = z)) + 
+  geom_contour_filled(aes(fill = stat(level))) + 
+  guides(fill = guide_colorsteps(barheight = unit(10, "cm")))
+```
+
+
+# 그외 추가된 기능
+
+```{r}
+ggplot(mpg) + 
+  geom_point(aes(hwy, displ)) + 
+  ggtitle("The placement of this title may surprise you") + 
+  theme(plot.title.position = "plot")
+```
+
+```{r}
+huron <- data.frame(year = 1875:1972, level = as.vector(LakeHuron))
+ggplot(huron, aes(year)) + 
+  geom_ribbon(aes(ymin = level - 10, ymax = level + 10), fill = "grey", colour = "black")
+```
+
+```{r}
+ ggplot(diamonds, aes(carat)) +
+  geom_density(fill = "grey")
+```
+
+
+---
+
+# 총평
+
+그동안 R 공부를 하면서 새로운 기술은 커녕, **이미** 과거의 기술만 따라가고 있었다. 어쩌면 매우 당연하게 생각하기도 했었다. 마치 초중고 20년동안 2천년 전의 유클리드 기하학'만'을 배운것과 같다. 기본을 배워야 다음을 나갈수 있기 때문에. <br> <br>
+
+<p align="center">
+<font size="3em">
+**IT는 항상 그런것 만은 아닌것 같다.** <br>
+**과거의 코드는 과거대로.** <br>
+**새로운 기술은 여전히 계속 나오고 있다. ** <br>
+</font>
+</p>
+
+
