@@ -2,5 +2,10 @@ theme: jekyll-theme-minimal
 
 url: https://unfinishedgod.github.io/
 
-google_analytics: UA-145407326-3
 
+# Analytics
+analytics:
+  provider               : "google-gtag" # 구글 어날리틱스 등록 false (default), "google", "google-universal", "custom"
+  google:
+    tracking_id          : "UA-145407326-3"
+    anonymize_ip         : # true, false (default)
