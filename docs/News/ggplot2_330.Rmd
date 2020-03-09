@@ -1,7 +1,7 @@
 ---
 title: "ggplot 3.3.0 버전 업"
 author: "최의용"
-date: '2020 3 10 '
+date: '2020 3 10'
 output: 
   html_document:
     highlight: textmate
@@ -22,10 +22,9 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
   <b>출처: [Tidyverse-ggplot2 3.3.0](https://www.tidyverse.org/blog/2020/03/ggplot2-3-3-0/)</b><br>
 </p>
 
-# ggplot2 3.3.0
+# ggplot2 3.3.0 
 
 ggplot2 가 2020년 3월 5일에 3.3.0으로 업데이트가 되었다. ggplot을 조금 쓰고 있기는 하다만 막상 ggplot전체중 얼마나 쓰고 있냐고 물어보면 5%수준 정도도 안되는 사용향에 이번에 한번, 관심을 가져보고자 포스팅을 해보려 한다. 패키지가 업데이트 되어 install.packages("ggplot2") 로 재설치 하면 됬으나, Mac의 경우에는 remove.packages("ggplot2")를 진행하고 설치를 다시 했어야 하더라. 그럼 이제 하나씩 추가된 기능을 소개해보도록 하겠다.
-
 
 
 # X축, Y축의 라벨 겸칩에서 해방 
@@ -122,7 +121,7 @@ ggplot(mpg) +
   
   
   
-# 방향 설정에서의 자유로움 (goord_flip()의 대안)
+# 방향 설정에서의 자유로움
 
 기존에 ggplot2에서 x축과 y축을 바꾸려면 coord_flip()를 사용해야 했으며, 당시에 나에게는 이것조차 새로운 세계였다. 그러나 이제는 이를 좀 더 직관적으로 사용할 수가 있게 되었다.
 
