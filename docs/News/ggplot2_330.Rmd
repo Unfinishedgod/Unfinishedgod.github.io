@@ -42,9 +42,9 @@ p <- ggplot(mpg) +
 plot(p)
 ```
 
-### x축의 겹치는 문제 해결
+### label 겹치는 문제 해결
  
-기존 코드에 **scale_x_discrete(guide = guide_axis(n.dodge = 2))**를 추가 해주어 x축의 겹침을 해결 할 수 있다.
+기존 코드에 **scale_x_discrete(guide = guide_axis(n.dodge = 2))**를 추가 해주어 label의 겹침을 해결 할 수 있다.
 
 ```{r}
 # Use guide_axis to dodge the labels
@@ -52,7 +52,7 @@ p +
   scale_x_discrete(guide = guide_axis(n.dodge = 2))
 ```
 
-### 겹치는 x축 제거
+### 겹치는 label 제거
 
 또는 **scale_x_discrete(guide = guide_axis(check.overlap = TRUE))** 코드를 사용하여 겹치는 부분을 제거 할 수 있다.
 
@@ -63,9 +63,9 @@ p +
 ```
 
 
-# 새로운 bin scale
+# 새로운 scale 의 등장 : scale_*_binned()
 
-기존에 ggplot에서 점들을 표현하는데 있어 버블로 표현하는 기능이 있었다. 그러나 이번에 새로 scale에 bin이라는 것이 추가 되어 쉽게 표현을 할 수 있게 되었다. (기존 ggplot scale에는 연속, 이산형 scale만 존재 했었다.)
+**scale_( )_discrete** & **scale_( )_continuous** 에 이은 3번째 scale이 추가 되었다. 
 
 ```{r}
 p <- ggplot(mpg) + 
@@ -73,7 +73,7 @@ p <- ggplot(mpg) +
 ```
 
 
-### 연속형 데이터를 크기로 구분 짓기 
+### 연속형 데이터에 이산형 크기로 구분 짓기 가능 
 
 **scale_size_binned()**를 사용하면서 연속형데이터인 hwy에 대해 단계적으로 구분을 지어 크기로 표현을 할 수가 있다.
 
@@ -82,7 +82,7 @@ p +
   scale_size_binned()
 ```
 
-### 연속형 데이터를 색으로 구분 짓기
+### 연속형 데이터에 이산형 컬러로 구분 짓기 가능
 
 **scale_colour_binned()**를 사용하면서 연속형으로 표현하는 hwy (파란색 label)을 구분 지어줄 수 있다.
 
@@ -93,7 +93,7 @@ p +
 
 ### scale_size_binned
 
-잘 이해가 가지 않지만, scale_size_binned에 limit을 걸어 표시 해주는건가 보다. 
+이산형 binning 처리에 항상 애매한 문제가 되는 경계값도 legend에 표기가능!
   
 ```{r}
 p + 
@@ -121,7 +121,7 @@ ggplot(mpg) +
   
   
   
-# 방향 설정에서의 자유로움
+# 차트 축 돌리기 (coord_flip()의 대안)
 
 기존에 ggplot2에서 x축과 y축을 바꾸려면 coord_flip()를 사용해야 했으며, 당시에 나에게는 이것조차 새로운 세계였다. 그러나 이제는 이를 좀 더 직관적으로 사용할 수가 있게 되었다.
 
@@ -142,7 +142,7 @@ ggplot(mpg) +
 
 ### geom_smooth 역시 y관점에서 설정이 가능하다
 
-geom_smooth의 y버전이다. xy대칭의 관점에서 보면 좋을것 같다. 이번 방향 관련해서의 업데이트는 하나의 도전일 수도 있지 않을까 하는 생각이 들기도 하다. 우리 모드는 xy평면에 세뇌를 당해 살아온 것이 15년이 넘을텐데, 이 자연스러움을 깨는건 쉽지 않을수 있다.
+글로벌하게 적용되는 aes 가 아닌 geom_* 함수의 orientation 아규먼트를 통해 개별 geom 단위로 처리하는 것도 가능
 
 ```{r}
 ggplot(mpg, aes(displ, hwy)) + 
@@ -153,7 +153,7 @@ ggplot(mpg, aes(displ, hwy)) +
 
 # 좀더 심미적인 그래프
 
-사실, 아까도 말했지만 ggplot의 5%남짓 밖에 사용하지 못하는 나에게도 충분히 이쁜 그래프를 표현할 수 있다고 생각 했었다. 글머에도 이번에 그래프를 그리는데에 있어, 조금더 이쁜 표현을 설정할 수 있는 기능을 추가 해주었다.
+사실, 아까도 말했지만 ggplot의 5%남짓 밖에 사용하지 못하는 나에게도 충분히 이쁜 그래프를 표현할 수 있다고 생각 했었다. 그럼에도 이번에 그래프를 그리는데에 있어, 조금더 이쁜 표현을 설정할 수 있는 기능을 추가 해주었다.
 
 ```{r}
 ggplot(mpg, aes(displ)) +
@@ -169,9 +169,9 @@ ggplot(mpg, aes(class, hwy)) +
   geom_boxplot(aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
 ```
 
-### 다각형의 조건적인 표현
+### 하나의 aes 에 여러개의 mapping을 하는 것도 이제 가능함
 
-**stage()** 기능을 사용하여 다각형의 내부외부를 컨트롤할 수 있다. 이 기능은 조만간 이쁘게 표현을 할 일이 있을거 같다.
+**stage()** 기능을 사용.
 
 ```{r}
 ggplot(mpg) + 
@@ -201,6 +201,8 @@ register_theme_elements(
 
 
 # 더 나아진 윤곽 계산
+
+geom_polygon 을 통한 contour 처리는 inner hole 및 next level contour 처리가 안되기에 그래픽이 쪼개진 폴리곤으로 망가져보였다. 이제 geom_contour_* 를 이용하면 깔끔한 처리가 가능해졌다.
 
 ### Step 1. 
 윤곽을 계산하는데 있어 보다 선명한 표현을 할 수 있게 되었다. 다음 그림을 보자. 등고선을 표현하려고 하는데 직관적이지도 뚜렷하지도 않다. 
@@ -238,6 +240,10 @@ ggplot(volcano_long, aes(x, y, z = z)) +
 
 # 그외 추가된 기능
 
+ - geom_ribbon, area, density 의 outline stroke 처리 (외곽선 처리)
+ - outline.type 아규먼트를 통해 명시적 처리가능
+ - upper, lower, both, full 등 4가지 타입 제공
+
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(hwy, displ)) + 
@@ -261,14 +267,7 @@ ggplot(huron, aes(year)) +
 
 # 총평
 
-그동안 R 공부를 하면서 새로운 기술은 커녕, **이미** 과거의 기술만 따라가고 있었다. 어쩌면 매우 당연하게 생각하기도 했었다. 마치 초중고 20년동안 2천년 전의 유클리드 기하학'만'을 배운것과 같다. 기본을 배워야 다음을 나갈수 있기 때문에. <br> <br>
+처음으로 새로운 버전에 대해 리뷰를 했다. 아직 많이 미숙해서 제대로 리뷰가 안되었으나 **하헌철**님의 도움으로 조금 더 전문적인 리뷰를 할 수 있게 되었다. 다음에는 일기처럼 쓰는게 아니라 좀 더 전문적으로 리뷰를 쓰는쪽으로 노력을 해봐야 겠다.
 
-<p align="center">
-<font size="3em">
-**IT는 항상 그런것 만은 아닌것 같다.** <br>
-**과거의 코드는 과거대로.** <br>
-**새로운 기술은 여전히 계속 나오고 있다. ** <br>
-</font>
-</p>
 
 
