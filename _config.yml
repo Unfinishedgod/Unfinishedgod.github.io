@@ -8,3 +8,5 @@ analytics:
   google:
     tracking_id          : "UA-145407326-3"
     anonymize_ip         : # true, false (default)
+
+theme: jekyll-theme-architect
