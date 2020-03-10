@@ -1,5 +1,5 @@
 ---
-title: "bike_sharing(Doing)"
+title: "Bike Sharing Demand"
 author: "최의용"
 date: "`r Sys.Date()`"
 output: 
@@ -8,56 +8,90 @@ output:
     theme: default
     toc: true
     toc_float: true
-    code_folding: hide
+    code_folding: show
     df_print: paged
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,fig.width=11, fig.align = "center")
+knitr::opts_chunk$set(echo = TRUE, message=FALSE,  warning=FALSE,fig.width=10, fig.height = 8)
 ```
 
 <p align="center">
-  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/3948/media/bikes.png"> <br>
-  <b>Kaggle: [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand/overview)</b> <br>
+  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/3948/media/bikes.png"><br>
+    <b>Bike Sharing Demand 링크: [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand)</b><br>
   <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Kaggle/blob/master/Bike_Sharing_Demand/Bike_Sharing_Demand.Rmd)</b><br>
 </p>
 
+# Kaggle - Bike Sharing Demand
 
+캐글 데이터 분석을 해보자. Bike Sharing Demand라는 주제로 자전거가 얼마나 대여가 될지 예측을 하는 문제다. 타이타닉 만큼 기본 주제로 여겨지며 XgBoost도 공부 해볼겸 한번 써보려 한다. 
+
+### 데이터 다운로드
+
+데이터는 캐글의 Data시트에서 다운을 받으면 된다. 후에 api를 사용한 방법도 추가 하도록 하겠다.
+
+<p align="center">
+<b> <img src="kaggle_download.png" width="800" height="500"><b/>
+</p>
+
+### 평가 
+
+평가는 RMSLE(Root Mean Square Logarithmic Error)로 하며 이는 RMSE에 각각 log를 씌운것으로 오차에 대해서 과대평가된 항목보다 과소평가된 항목에 패널티를 더 주게 된다. 식은 다음과 같다.
+
+<p align="center">
+$$ \sqrt{\frac{1}{n} \sum(\log(pi + 1) - \log(a_i+1))2 } $$
+</p>
+
+### 데이터 형식 
+
+Bike Sharing Demand 의 데이터는 다음과 같다. 이중에서 casual, registered는 test_set에 없어서 사용하지 않을 것이고, 날짜와 날씨 데이터로 이루어져 있다.
+
+- datetime: 년-월-일 시간 데이터
+- season:  1 = 봄, 2 = 여름, 3 = 가을, 4 = 겨울 
+- holiday: 공휴일 또는 주말
+- workingday: 공휴일, 주말을 제외한 평일
+- weather 
+  - 1: 매우 맑음(Clear, Few clouds, Partly cloudy, Partly cloudy)
+  - 2: 맑음(Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist)
+  - 3: 나쁨(Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds)
+  - 4: 매우 나쁨(Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog)
+- temp: 기온
+- atemp: 체감온도 정도로 보자
+- humidity: 상대 습도
+- windspeed: 바람의 세기
+- casual: 미등록 사용자 렌탈 수 
+- registered: 등록된 사용자 렌탈수 
+- count: 렌탈한 총 합
+
+# 사전준비
+
+분석을 하기에 앞서, 패키지를 불러 오고 데이터를 파악 해보자. 
+
+### Load Packages
+
+불러올 Packages는 다음과 같다.
 
 ```{r}
-library(tidyverse)
-library(lubridate)
+library(tidyverse) 
+library(lubridate) 
 library(stringr)
 library(caret)
 library(readr)
 library(gridExtra)
 library(xgboost)
 library(Metrics)
+library(ggplot2)
+library(patchwork)
+```
 
+### Data Load & 전처리 
 
+데이터를 불러오고 전처리를 해주도록 하자. xgboost를 사용하기 위해선, 각각의 데이터는 모두 숫자형으로 표현 되어야 한다. **날짜 데이터**는 년, 월, 시간, 요일로 따로 데이터를 불러 오도록 하자.
+
+```{r}
 train_set <- read_csv("train.csv")
 test_set <- read_csv("test.csv")
 submission <- read_csv("sampleSubmission.csv")
-
-
-# Data Fields
-# datetime - hourly date + timestamp  
-# season -  1 = spring, 2 = summer, 3 = fall, 4 = winter 
-# holiday - whether the day is considered a holiday
-# workingday - whether the day is neither a weekend nor holiday
-# weather - 1: Clear, Few clouds, Partly cloudy, Partly cloudy
-# 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist
-# 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds
-# 4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog 
-# temp - temperature in Celsius
-# atemp - "feels like" temperature in Celsius
-# humidity - relative humidity
-# windspeed - wind speed
-# casual - number of non-registered user rentals initiated
-# registered - number of registered user rentals initiated
-# count - number of total rentals
-
-
 
 # remove casual registered
 train_set <- train_set %>% 
@@ -66,373 +100,210 @@ train_set <- train_set %>%
     year = year(datetime),
     month = month(datetime),
     hour = hour(datetime),
-    minute = minute(datetime)) %>% 
-  mutate(group = sample(
-    c("train", "valid"),
-    size = nrow(train_set),
-    replace = TRUE,
-    prob = c(0.7, 0.3) # Set weights for each group here
-  ))
+    wday = wday(datetime))
 
-train_set_2 <- train_set
-
-train_set$season <- as.factor(train_set$season)
-levels(train_set$season) <- c('Spring','Summer','Fall','Winter')
 
 test_set <- test_set %>% 
   mutate(
     year = year(datetime),
     month = month(datetime),
     hour = hour(datetime),
-    minute = minute(datetime))
+    wday = wday(datetime))
+```
 
+### 데이터 자료형 파악
 
-
-# valid_set <- train_set %>% 
-#   filter(group == "valid")
-# 
-# 
-# train_set <- train_set %>% 
-#   filter(group == "train")
-
-
-
-dim(train_set)
-# dim(valid_set)
-
+```{r}
 str(train_set)
-# str(valid_set)
+```
 
-colnames(train_set)
-# colnames(valid_set)
+### 데이터 요약
 
-head(train_set)
-# head(valid_set)
+```{r}
+summary(train_set)
+```
 
-# Data Visualization
-# The count vs temperature plot shows that rental count increases as the temperature increases.
+### 결측치 파악
 
-
-# Temperature v Count plot
-# Scatter Plot to show the relationship between count (number of total rentals) and temp (temperature in Celsius)
-aa <- ggplot(data = train_set, aes(temp,count)) +
-  geom_point(alpha=.2,aes(color=temp)) +
-  ggtitle("Count vs Temperature") + xlab("Temp (Celsius)") +
-  ylab("Rental Count") + labs(color='Temp(C)') +
-  theme_bw() +  
-  theme(legend.position = "bottom")
+```{r}
+sum(is.na(train_set))
+```
 
 
-# Scatter Plot to show the relationship between count (number of total rentals) and date time.
-bb <- ggplot(data = train_set, aes(datetime,count)) +
-  geom_point(alpha = .2,aes(color=temp)) +
-  scale_colour_continuous(low = "yellow", high = 'red') + theme_bw() +
-  ggtitle("Count vs Datetime") + 
-  xlab("Date") + 
-  ylab("Rental Count") +
-  labs(color='Temp(C)') + 
-  theme(legend.position = "bottom")
+# 데이터 시각화
 
-grid.arrange(aa, bb, ncol=2)
+이렇게 데이터를 파악 해봤으니 이를 시각화 해보도록 하자. 시각화의 편의성을 위해서 숫자형 데이터는 모두 라벨링을 해주었다. 대신 `train_set_vis`라고 train_set를 따로 지정해주어 혼선이 없도록 해주었다.
 
-# There is a clear seasonal trend where the total rental bikes seems to decrease during Winters i.e month of January and Feburary of the year and the total rental bikes seems to increase during summers.
+### 각 변수별 Count와의 관계
 
-# The other trend which is quite evident is that the number of rental bike counts is increasing from year 2011 to year 2013.
+각각의 변수는 Count와 어떤 관계를 보이는가? 가장 먼저 데이터가 count에 어떤 영향을 끼치는지 파악해보도록 하자. hour변수가 눈에 띄게 count에 영향을 끼치는 것을 확인할 수 있었다. 방법론적으로는 ggplot 객체를 한꺼번에 불러와서 list화 시키는 방법을 택했다. 그리고 나서 grid.arrange() 함수를 사용하여 이를 한눈에 볼 수 있도록 시각화를 했다. 이번에 참고 해볼만한 구글 키워드를 소개 하겠다.
+ 
+ - 참고: map in tydiverse (lapply 보다 빠르게 병렬 처리를 해줄수 있다.)
+ - 참고: grid.arrange in r (ggplot을 grid화 시켜서 표현을 할 수 있다.)
 
+```{r fig.height = 10}
+train_set_vis <- train_set
 
-## Correlation between temperature and count.
-
-cor(train_set[,c('temp','count')])
-
-# There is not so strong correlation between temp and count.
-
-## Box Plot
-ggplot(data=train_set,aes(season,count,color = season)) +
-  geom_boxplot( alpha = .2) + 
-  ggtitle("Rental count by season") + 
-  xlab("Season") +
-  ylab("Rental Count") +
-  labs(color='Season', labels=c("Spring","Summer","Fall","Winter")) +
-  theme_bw() +
-  theme(legend.position = "bottom")
-
-# The box plot between the number of bike rentals and season shows that the line can not capture the non linear relationship and that there’s is more rentals in winter as compared to spring.
+train_set_vis$season  <- factor(train_set_vis$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+train_set_vis$weather <- factor(train_set_vis$weather, labels = c("Good", "Normal", "Bad", "Very Bad"))
+train_set_vis$holiday <- factor(train_set_vis$holiday)
+train_set_vis$workingday <- factor(train_set_vis$workingday)
+train_set_vis$year <- factor(train_set_vis$year)
+train_set_vis$month <- factor(train_set_vis$month)
+# train_set_vis$hour <- factor(train_set_vis$hour)
+train_set_vis$wday <- factor(train_set_vis$wday, labels = c("Sun","Mon", "Tue","Wed","Thu","Fir","Sat"))
 
 
-## Feature Engineering
-# As part of feature engineering I have added an hour column in the dataset.
+non_hour_list <- (colnames(train_set_vis) != "count")%>%
+  which()
 
+lst <- map(non_hour_list, function(i) {
+  df_list <- colnames(train_set_vis)[i]
 
+  train_set_vis %>%
+    select(df_list, count) %>%
+    rename(aa = df_list) %>%
+    ggplot(aes(aa,count)) +
+    geom_point(alpha=.2,color = "#008ABC") +
+    labs(title = paste0(df_list," vs count"), x = df_list, y = "",color=df_list) +
+    theme_bw() +
+    theme(legend.position = "bottom")
+})
 
-## Relationship between hour of the working day and the count of bikes rented.
-ggplot(filter(train_set,workingday == 1), aes(hour,count)) + 
-  geom_point()
+grid.arrange(grobs=lst, ncol=3)
+```
 
-# This scatter plot shows an interesting trend where count of rented bikes increases during the evening hours when people leave from office i.e. around 5 PM and morning hours when people leave for office i.e. around 8 AM.
-# ggplot(filter(train_set,workingday == 1), aes(hour,count)) +
-#   geom_point(position=position_jitter(w=1,h=0),aes(color = temp),alpha=0.5) +
-#   scale_color_gradientn(colours = c('dark blue','blue','light blue','light green','yellow','orange','red')) +
-#   theme_bw()
+## hour와 다른 변수들간의 관계 
 
-# scale_color_gradientn(colors = c('blue','green','yellow','orangedred','red','darkred')) +
-  
+위 그림에서 count에 가장 많은 영향을 끼친 변수로는 hour임을 알 수 있었다. 그럼 이번엔 hour이 다른 변수와 어떤 관계 인지 확인 해보도록 하자. 
 
-aa <- train_set %>% 
-  filter(workingday == 1) %>%
-  ggplot(aes(hour,count)) +
-  geom_point( alpha = .5,position = position_jitter(w=1,h=0),aes(color=temp)) +
-  scale_color_gradientn(colors = c('blue','green','yellow','orangered','red')) +
-  ggtitle("workingday Rental Count") + xlab("Hour") + ylab("Rental Count") +
-  labs(color='Temp(C)') +  
-  theme(legend.position = "bottom")
+ - season: 의외로 Spring가 가장 낮은것을 확인 할수 있었다. 
+ - holiday: 0, 1 이 뚜렷하게 구분이 되어 있다. 그러나.. 좀 더 확인해볼 필요가 있어보인다. 
+ - workingday: 0,1 역시 뚜렷하게 구분 되어 있다. 
+ - weather: 정말 뚜렷하게 날씨별로 구분이 되는걸 볼 수 있다.
+ - year: 2011년에 비해 2012년이 좀 더 많은걸 볼 수 있다.
+ - month: 월별로 구분이 되지만 뚜렷하게 알 수 있는 방법은 없다.
+ - wday: 요일별로 했을때 평일과 주말의 분포가 선명하게 보인다. 평일은 08시, 17시 (출퇴근시간), 주말은 12시에 뚜렷하게 솟아 오른걸 확인뿐만 아니라 이해를 할 수 있었다.
 
-# This plot gives an interesting finding regarding temperature and bike rental count. As the temperature increases i.e. gets hotter the count of bike rental increases and for cold temperature there is a decline in count of bike rental.
+```{r fig.height = 10}
+factor_list <- sapply(train_set_vis, is.factor) %>%
+  which()
 
-## Relationship between hour of the non-working day and the count of bikes rented.
+lst <- lapply(factor_list, function(i) {
+  df_list <- colnames(train_set_vis)[i]
 
-bb <- train_set %>% 
-  filter(workingday == 0) %>%
-  ggplot(aes(hour,count)) +
-  geom_point( alpha = .5,position = position_jitter(w=1,h=0),aes(color=temp)) +
-  scale_color_gradientn(colors = c('blue','green','yellow','orangered','red')) +
-  ggtitle("Weekday Rental Count") + xlab("Hour") + ylab("Rental Count") + 
-  labs(color='Temp(C)') +  
-  theme(legend.position = "bottom")
+  train_set_vis %>%
+    rename(aa = df_list) %>%
+    group_by(aa, hour) %>%
+    summarise(count = sum(count)) %>%
+    ggplot(aes(x = hour, y = count, group = aa, colour = aa)) +
+    labs(title = paste0("Count by ",df_list), x = "Hour",  color = df_list) +
+    theme_bw() +
+    geom_line()
+})
 
+grid.arrange(grobs=lst, ncol=2)
+```
 
-grid.arrange(aa,bb, ncol=2)
+# Xgboost 사전 준비
 
-## Model Building
-# This model will be predicting the count of the bike rental based on the temp variable.
+이번엔 Xgboost를 사용하여 분석을 하기 위한 사전준비를 해주자. xgboost를 돌리기 위해선 데이터의 형식이 matrix형식이 되어야 한다. 
 
-# temp.model <- lm(count ~ temp, train_set)
-# print(summary(temp.model))
+# Count to log & Train / Test set 분리 
 
+Count에 log를 취해주자. 이는 RMSLE를 위한 것으로 로그를 취한 값의 RMSE를 최소화 한 것이 RMSLE가 최소화가 되기 때문이다. 또 모델을 돌릴때 datetime는 년, 월, 시간, 요일로 나누어 주었으니 빼주도록 하자.
 
-## Model Interpretation
-# ** Based on the value of Intercept which is 6.0462, linear regression model predicts that there will be 6 bike rental when the temperature is 0. ** For temp variable Estimated Std. value is 9.1705 which signigies that a temperature increase of 1 celsius holding all things equal is associated with a rental increase of about 9.1 bikes.
-# ** The above findings is not a Causation and Beta 1 would be negative if an increase in temperature was associated with a decrease in rentals.
-# 
-# Next we want to know is how many bikes would we predict to be rented if the temperature was 25 degrees celsius.
+```{r}
+train_set$count = log1p(train_set$count)
 
-
-
-## Building Second Model with more features
-# Model that attempts to predict count based off of the following features :-
-
-#   season
-# holiday
-# workingday
-# weather
-# temp
-# humidity
-# windspeed
-# hour (factor)
-
-## Important Finding
-# This sort of model doesn’t work well given our seasonal and time series data. We need a model that can account for this type of trend. We will get thrown off with the growth of our dataset accidentaly attributing to the winter season instead of realizing it’s just overall demand growing.
-
-
-##########################################################################################
-##########################################################################################
-
-# train_set <- train_set_2 %>% 
-#   filter(group == "train") 
-# 
-# valid_set <- train_set_2 %>% 
-#   filter(group == "valid") 
-# 
-# 
-# train_set$count = log1p(train_set$count)
-# 
-# X_train <- train_set %>%
-#   select(-count, - datetime, -group) %>% 
-#   as.matrix()
-# 
-# y_train <- train_set$count
-# 
-# 
-# dtrain = xgb.DMatrix(X_train, label = y_train)
-# 
-# 
-# # cv <- xgb.cv(data = dtrain, nrounds = 3, nthread = 2, nfold = 5, metrics = list("rmse","auc"),
-# #              max_depth = 3, eta = 1, objective = "reg:squarederror")
-# # 
-# # print(cv)
-# # print(cv, verbose=TRUE)
-# 
-# 
-# model = xgb.train(data = dtrain, 
-#                   nround = 150, 
-#                   max_depth = 5, 
-#                   eta = 0.1, 
-#                   subsample = 0.9)
-# 
-# 
-# ## cv grid search
-# searchGridSubCol <- expand.grid(subsample = c(0.5, 0.6), 
-#                                 colsample_bytree = c(0.5, 0.6),
-#                                 max_depth = c(3, 4, 5),
-#                                 min_child = seq(1), 
-#                                 eta = c(0.1)
-# )
-# 
-# ntrees <- 100
-# 
-# system.time(
-#   rmseErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
-#     
-#     #Extract Parameters to test
-#     currentSubsampleRate <- parameterList[["subsample"]]
-#     currentColsampleRate <- parameterList[["colsample_bytree"]]
-#     currentDepth <- parameterList[["max_depth"]]
-#     currentEta <- parameterList[["eta"]]
-#     currentMinChild <- parameterList[["min_child"]]
-#     
-#     xgboostModelCV <- xgb.cv(data =  dtrain, nrounds = ntrees, nfold = 5, showsd = TRUE, 
-#                              metrics = "rmse", verbose = TRUE, "eval_metric" = "rmse",
-#                              "objective" = "reg:linear", "max.depth" = currentDepth, "eta" = currentEta,                               
-#                              "subsample" = currentSubsampleRate, "colsample_bytree" = currentColsampleRate
-#                              , print_every_n = 10, "min_child_weight" = currentMinChild, booster = "gbtree",
-#                              early_stopping_rounds = 10)
-#     
-#     xvalidationScores <- as.data.frame(xgboostModelCV$evaluation_log)
-#     rmse <- tail(xvalidationScores$test_rmse_mean, 1)
-#     trmse <- tail(xvalidationScores$train_rmse_mean,1)
-#     output <- return(c(rmse, trmse, currentSubsampleRate, currentColsampleRate, currentDepth, currentEta, currentMinChild))}))
-# 
-# 
-# output <- as.data.frame(t(rmseErrorsHyperparameters))
-# varnames <- c("TestRMSE", "TrainRMSE", "SubSampRate", "ColSampRate", "Depth", "eta", "currentMinChild")
-# names(output) <- varnames
-# head(output)
-# 
-# # xgb.importance(feature_names = colnames(X_train), model) %>% 
-# #   xgb.plot.importance()
-# 
-# 
-# 
-# X_valid = valid_set %>% 
-#   select(- datetime, -group, -count) %>% 
-#   as.matrix()
-# 
-# y_valid = valid_set$count
-# 
-# preds = predict(model, y_valid)
-# preds = expm1(preds)
-# 
-# solution = data.frame(datetime = valid_set$datetime, count = preds)
-# 
-# rmsle(y_valid, preds)
-
-# write.csv(solution, "solution.csv", row.names = FALSE)
-##########################################################################################
-##########################################################################################
-
-train_set_2$count = log1p(train_set_2$count)
-
-X_train <- train_set_2 %>%
-  select(-count, - datetime, -group) %>% 
+X_train <- train_set %>%
+  select(-count, - datetime) %>%
   as.matrix()
 
-y_train <- train_set_2$count
+y_train <- train_set$count
 
+X_test = test_set %>% 
+  select(- datetime) %>% 
+  as.matrix()
+```
 
+# Grid Search / Cross Validation
+
+Grid search와 Cross validation을 실행 해보자. xgboost를 돌리는데에 있어, 모델에 여러 조건을 넣어주기 위해 Grid search를 사용했고, 모델의 결과가 validataion에만 성능이 좋고, 실제 결과에는 성능이 좋지 않을지도 몰라 Cross validation을 해주도록 한다. xgboost의 기술적인 설명은 다음 키워드를 참고하도록 하자
+
+- 참고: Xgboost in r
+
+```{r, results="hide"}
 dtrain = xgb.DMatrix(X_train, label = y_train)
 
-
-# cv <- xgb.cv(data = dtrain, nrounds = 3, nthread = 2, nfold = 5, metrics = list("rmse","auc"),
-#              max_depth = 3, eta = 1, objective = "reg:squarederror")
-
-# print(cv)
-# print(cv, verbose=TRUE)
-
-
-
-
-#####
-#####
-## cv grid search
-searchGridSubCol <- expand.grid(subsample = c(0.5, 0.6), 
+searchGridSubCol <- expand.grid(subsample = c(0.5, 0.6),
                                 colsample_bytree = c(0.5, 0.6),
-                                max_depth = c(3, 4, 5),
-                                min_child = seq(1), 
-                                eta = c(0.1)
+                                max_depth = c(7:15),
+                                min_child = seq(1),
+                                eta = c(0.05,0.1,0.15)
 )
 
-# xgboostModelCV <- xgb.cv(data =  dtrain, nrounds = ntrees, nfold = 5, showsd = TRUE, 
-#                          metrics = "rmse", verbose = TRUE, "eval_metric" = "rmse",
-#                          "objective" = "reg:linear", 
-#                          "max.depth" = 3, 
-#                          "eta" = 0.1,                            
-#                          "subsample" = 0.7, 
-#                          "colsample_bytree" = 0.5, 
-#                          print_every_n = 10,
-#                          "min_child_weight" = 1,
-#                          booster = "gbtree",
-#                          early_stopping_rounds = 10)
 
+ntrees <- 150
 
-ntrees <- 100
+rmseErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
 
-system.time(
-  rmseErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
-    
-    #Extract Parameters to test
-    currentSubsampleRate <- parameterList[["subsample"]]
-    currentColsampleRate <- parameterList[["colsample_bytree"]]
-    currentDepth <- parameterList[["max_depth"]]
-    currentEta <- parameterList[["eta"]]
-    currentMinChild <- parameterList[["min_child"]]
-    
-    xgboostModelCV <- xgb.cv(data =  dtrain, nrounds = ntrees, nfold = 5, showsd = TRUE, 
-                             metrics = "rmse", verbose = TRUE, "eval_metric" = "rmse",
-                             "objective" = "reg:linear", "max.depth" = currentDepth, "eta" = currentEta,                            
-                             "subsample" = currentSubsampleRate, "colsample_bytree" = currentColsampleRate
-                             , print_every_n = 10, "min_child_weight" = currentMinChild, booster = "gbtree",
-                             early_stopping_rounds = 10)
-    
-    xvalidationScores <- as.data.frame(xgboostModelCV$evaluation_log)
-    rmse <- tail(xvalidationScores$test_rmse_mean, 1)
-    trmse <- tail(xvalidationScores$train_rmse_mean,1)
-    output <- return(c(rmse, trmse,currentSubsampleRate, currentColsampleRate, currentDepth, currentEta, currentMinChild))})
-  )
+  #Extract Parameters to test
+  currentSubsampleRate <- parameterList[["subsample"]]
+  currentColsampleRate <- parameterList[["colsample_bytree"]]
+  currentDepth <- parameterList[["max_depth"]]
+  currentEta <- parameterList[["eta"]]
+  currentMinChild <- parameterList[["min_child"]]
+
+  xgboostModelCV <- xgb.cv(data =  dtrain, nrounds = ntrees, nfold = 5, showsd = TRUE,
+                           metrics = "rmse", verbose = TRUE, "eval_metric" = "rmse",
+                           "objective" = "reg:linear", "max.depth" = currentDepth, "eta" = currentEta,
+                           "subsample" = currentSubsampleRate, "colsample_bytree" = currentColsampleRate
+                           , print_every_n = 10, "min_child_weight" = currentMinChild, booster = "gbtree",
+                           early_stopping_rounds = 10)
+
+  xvalidationScores <- as.data.frame(xgboostModelCV$evaluation_log)
+  rmse <- tail(xvalidationScores$test_rmse_mean, 1)
+  trmse <- tail(xvalidationScores$train_rmse_mean,1)
+  output <- return(c(rmse, trmse,currentSubsampleRate, currentColsampleRate, currentDepth, currentEta, currentMinChild))})
 
 
 output <- as.data.frame(t(rmseErrorsHyperparameters))
 varnames <- c("TestRMSE", "TrainRMSE", "SubSampRate", "ColSampRate", "Depth", "eta", "currentMinChild")
 names(output) <- varnames
-head(output)
 
+tail(output, 3)
+```
 
-#####
-#####
+# Model  
 
+Grid search & Cross Validation 결과 최적의 파라미터를 적용해 다음의 파라미터를 집어넣어 결과를 보도록 하자. 그리고 xgboost에서 어떤 변수가 가장 의미가 있었는지 순서대로 확인할 수가 있다.
+
+```{r}
+# tail(output)
 model = xgb.train(data = dtrain, 
                   nround = 150, 
-                  max_depth = 5, 
-                  eta = 0.1, 
-                  subsample = 0.9)
+                  max_depth = 10, 
+                  eta = 0.15, 
+                  subsample = 0.6,
+                  colsample_bytree = 0.6,
+                  min_child_weight = 1)
+
 
 xgb.importance(feature_names = colnames(X_train), model) %>% 
   xgb.plot.importance()
 
-
-
-X_test = test_set %>% 
-  select(- datetime) %>% 
-  as.matrix()
-
-# y_test = test_set$count
 
 preds = predict(model, X_test)
 preds = expm1(preds)
 
 solution = data.frame(datetime = test_set$datetime, count = preds)
 
-
 write.csv(solution, "solution.csv", row.names = FALSE)
-
-
 ```
 
+# Score
+
+이렇게 돌린 결과 RMSLE는 0.41653이 나왔다. 최고 점수가 0.33756(2020-03-11 기준)이며 한~참 부족한 수준이지만, 앞으로 여러 캐글을 필사하면서 좀 더 성능을 높게할 수 있는 방법을 찾아보도록 하자.
+
+![](bike_sharing_score.png)
