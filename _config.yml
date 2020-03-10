@@ -6,5 +6,5 @@ url                    : "https://Unfinishedgod.github.io"
 analytics:
   provider               : false # false (default), "google", "google-universal", "custom"
   google:
-    tracking_id          :
+    tracking_id          : "UA-145407326-3"
     anonymize_ip         : # true, false (default)
