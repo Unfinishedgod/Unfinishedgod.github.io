@@ -13,7 +13,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE,  warning=FALSE,fig.width=10, fig.height = 8)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=10, fig.height = 8)
 ```
 
 <p align="center">
@@ -22,11 +22,15 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE,  warning=FALSE,fig.width=10, f
   <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Kaggle/blob/master/Bike_Sharing_Demand/Bike_Sharing_Demand.Rmd)</b><br>
 </p>
 
-# Kaggle - Bike Sharing Demand
+<br>
+
+# 0. Kaggle - Bike Sharing Demand
 
 캐글 데이터 분석을 해보자. Bike Sharing Demand라는 주제로 자전거가 얼마나 대여가 될지 예측을 하는 문제다. 타이타닉 만큼 기본 주제로 여겨지며 XgBoost도 공부 해볼겸 한번 써보려 한다. 
 
-### 데이터 다운로드
+<br>
+
+### 0.1 데이터 다운로드
 
 데이터는 캐글의 Data시트에서 다운을 받으면 된다. 후에 api를 사용한 방법도 추가 하도록 하겠다.
 
@@ -34,7 +38,9 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE,  warning=FALSE,fig.width=10, f
 <b> <img src="kaggle_download.png" width="800" height="500"><b/>
 </p>
 
-### 평가 
+<br>
+
+### 0.2 평가 
 
 평가는 RMSLE(Root Mean Square Logarithmic Error)로 하며 이는 RMSE에 각각 log를 씌운것으로 오차에 대해서 과대평가된 항목보다 과소평가된 항목에 패널티를 더 주게 된다. 식은 다음과 같다.
 
@@ -42,7 +48,9 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE,  warning=FALSE,fig.width=10, f
 $$ \sqrt{\frac{1}{n} \sum(\log(pi + 1) - \log(a_i+1))2 } $$
 </p>
 
-### 데이터 형식 
+<br>
+
+### 0.3 데이터 형식 
 
 Bike Sharing Demand 의 데이터는 다음과 같다. 이중에서 casual, registered는 test_set에 없어서 사용하지 않을 것이고, 날짜와 날씨 데이터로 이루어져 있다.
 
@@ -63,11 +71,16 @@ Bike Sharing Demand 의 데이터는 다음과 같다. 이중에서 casual, regi
 - registered: 등록된 사용자 렌탈수 
 - count: 렌탈한 총 합
 
-# 사전준비
+<br>
+<br>
+
+# 1. 사전준비
 
 분석을 하기에 앞서, 패키지를 불러 오고 데이터를 파악 해보자. 
 
-### Load Packages
+<br>
+
+### 1.1 Load Packages
 
 불러올 Packages는 다음과 같다.
 
@@ -84,7 +97,9 @@ library(ggplot2)
 library(patchwork)
 ```
 
-### Data Load & 전처리 
+<br>
+
+### 1.2 Data Load & 전처리 
 
 데이터를 불러오고 전처리를 해주도록 하자. xgboost를 사용하기 위해선, 각각의 데이터는 모두 숫자형으로 표현 되어야 한다. **날짜 데이터**는 년, 월, 시간, 요일로 따로 데이터를 불러 오도록 하자.
 
@@ -111,30 +126,40 @@ test_set <- test_set %>%
     wday = wday(datetime))
 ```
 
-### 데이터 자료형 파악
+<br>
+
+### 1.3 데이터 자료형 파악
 
 ```{r}
 str(train_set)
 ```
 
-### 데이터 요약
+<br>
+
+### 1.4 데이터 요약
 
 ```{r}
 summary(train_set)
 ```
 
-### 결측치 파악
+<br>
+
+### 1.5 결측치 파악
 
 ```{r}
 sum(is.na(train_set))
 ```
 
+<br>
+<br>
 
-# 데이터 시각화
+# 2. 데이터 시각화
 
 이렇게 데이터를 파악 해봤으니 이를 시각화 해보도록 하자. 시각화의 편의성을 위해서 숫자형 데이터는 모두 라벨링을 해주었다. 대신 `train_set_vis`라고 train_set를 따로 지정해주어 혼선이 없도록 해주었다.
 
-### 각 변수별 Count와의 관계
+<br>
+
+### 2.1 각 변수별 Count와의 관계
 
 각각의 변수는 Count와 어떤 관계를 보이는가? 가장 먼저 데이터가 count에 어떤 영향을 끼치는지 파악해보도록 하자. hour변수가 눈에 띄게 count에 영향을 끼치는 것을 확인할 수 있었다. 방법론적으로는 ggplot 객체를 한꺼번에 불러와서 list화 시키는 방법을 택했다. 그리고 나서 grid.arrange() 함수를 사용하여 이를 한눈에 볼 수 있도록 시각화를 했다. 이번에 참고 해볼만한 구글 키워드를 소개 하겠다.
  
@@ -173,7 +198,9 @@ lst <- map(non_hour_list, function(i) {
 grid.arrange(grobs=lst, ncol=3)
 ```
 
-## hour와 다른 변수들간의 관계 
+<br>
+
+### 2.2 hour와 다른 변수들간의 관계 
 
 위 그림에서 count에 가장 많은 영향을 끼친 변수로는 hour임을 알 수 있었다. 그럼 이번엔 hour이 다른 변수와 어떤 관계 인지 확인 해보도록 하자. 
 
@@ -205,11 +232,16 @@ lst <- lapply(factor_list, function(i) {
 grid.arrange(grobs=lst, ncol=2)
 ```
 
-# Xgboost 사전 준비
+<br>
+<br>
+
+# 3. Xgboost
 
 이번엔 Xgboost를 사용하여 분석을 하기 위한 사전준비를 해주자. xgboost를 돌리기 위해선 데이터의 형식이 matrix형식이 되어야 한다. 
 
-# Count to log & Train / Test set 분리 
+<br>
+
+### 3.1 Count to log & Train / Test set 분리 
 
 Count에 log를 취해주자. 이는 RMSLE를 위한 것으로 로그를 취한 값의 RMSE를 최소화 한 것이 RMSLE가 최소화가 되기 때문이다. 또 모델을 돌릴때 datetime는 년, 월, 시간, 요일로 나누어 주었으니 빼주도록 하자.
 
@@ -227,13 +259,15 @@ X_test = test_set %>%
   as.matrix()
 ```
 
-# Grid Search / Cross Validation
+<br>
 
-Grid search와 Cross validation을 실행 해보자. xgboost를 돌리는데에 있어, 모델에 여러 조건을 넣어주기 위해 Grid search를 사용했고, 모델의 결과가 validataion에만 성능이 좋고, 실제 결과에는 성능이 좋지 않을지도 몰라 Cross validation을 해주도록 한다. xgboost의 기술적인 설명은 다음 키워드를 참고하도록 하자
+### 3.2 Grid Search / Cross Validation 실행
+
+Grid search와 Cross validation을 실행 해보자. xgboost를 돌리는데에 있어, 모델에 여러 조건을 넣어주기 위해 Grid search를 사용했고, 모델의 결과가 validataion에만 성능이 좋고, 실제 결과에는 성능이 좋지 않을지도 몰라 Cross validation을 해주도록 한다.(참고로 둘다 진행하는데 시간이 매우 오래 걸린다.) xgboost의 기술적인 설명은 다음 키워드를 참고하도록 하자
 
 - 참고: Xgboost in r
 
-```{r, results="hide"}
+```{r results= "hide"}
 dtrain = xgb.DMatrix(X_train, label = y_train)
 
 searchGridSubCol <- expand.grid(subsample = c(0.5, 0.6),
@@ -271,16 +305,26 @@ rmseErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
 output <- as.data.frame(t(rmseErrorsHyperparameters))
 varnames <- c("TestRMSE", "TrainRMSE", "SubSampRate", "ColSampRate", "Depth", "eta", "currentMinChild")
 names(output) <- varnames
-
-tail(output, 3)
 ```
 
-# Model  
+<br>
+
+### 3.3 Grid Search / Cross Validation 결과
+
+Grid Search / Cross Validation결과를 보자. tail()함수를 사용해서 마지막 6개만 뽑았으며, 결과는 다음과 같다. 이중에서 RMSE가 가장 낮은걸 선택하여 후에 지수화 하여 RMSLE가 낮은걸 선택하게 하려고 한다.
+
+```{r}
+tail(output)
+```
+
+
+<br>
+
+### 3.4 Model  
 
 Grid search & Cross Validation 결과 최적의 파라미터를 적용해 다음의 파라미터를 집어넣어 결과를 보도록 하자. 그리고 xgboost에서 어떤 변수가 가장 의미가 있었는지 순서대로 확인할 수가 있다.
 
 ```{r}
-# tail(output)
 model = xgb.train(data = dtrain, 
                   nround = 150, 
                   max_depth = 10, 
@@ -302,8 +346,11 @@ solution = data.frame(datetime = test_set$datetime, count = preds)
 write.csv(solution, "solution.csv", row.names = FALSE)
 ```
 
-# Score
+<br>
+<br>
 
-이렇게 돌린 결과 RMSLE는 0.41653이 나왔다. 최고 점수가 0.33756(2020-03-11 기준)이며 한~참 부족한 수준이지만, 앞으로 여러 캐글을 필사하면서 좀 더 성능을 높게할 수 있는 방법을 찾아보도록 하자.
+# 4. Score
+
+이렇게 돌린 결과 RMSLE는 0.41653이 나왔다. 최고 점수가 0.33756(2020-03-11 기준)에 비해 부족한 수준이지만, 앞으로 여러 캐글을 필사하면서 좀 더 성능을 높게할 수 있는 방법을 찾아보도록 하자.
 
 ![](bike_sharing_score.png)
