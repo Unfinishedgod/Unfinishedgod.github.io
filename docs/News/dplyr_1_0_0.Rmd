@@ -1,0 +1,40 @@
+---
+title: "dplyr 1.0.0 Update Review(Doing)"
+author: "최의용"
+date: '`r Sys.Date()`'
+output: 
+  html_document:
+    highlight: textmate
+    theme: default
+    toc: true
+    toc_float: true
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+```
+
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png" width="200" height="200"><br>
+  <b>출처: [dplyr 1.0.0 is coming soon](https://www.tidyverse.org/blog/2020/03/dplyr-1-0-0-is-coming-soon/?fbclid=IwAR1FzK7XeoDMBgzbA1-IYr5-ir-kqtdnVqSL3-6vCWCcAjHeHJlfuB0YCak)</b><br>
+</p>
+
+- https://www.tidyverse.org/blog/2020/03/dplyr-1-0-0-is-coming-soon/?fbclid=IwAR1FzK7XeoDMBgzbA1-IYr5-ir-kqtdnVqSL3-6vCWCcAjHeHJlfuB0YCak
+- https://dplyr.tidyverse.org/dev/articles/rowwise.html
+- https://dplyr.tidyverse.org/dev/articles/colwise.html
+- https://dplyr.tidyverse.org/dev/reference/summarise.html
+- https://dplyr.tidyverse.org/dev/reference/select.html
+- https://dplyr.tidyverse.org/dev/reference/relocate.html
+- https://dplyr.tidyverse.org/dev/articles/programming.html
+
+---
+
+# 총평
+
+
+
+
+
