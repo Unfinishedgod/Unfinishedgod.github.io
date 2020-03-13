@@ -9,9 +9,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Owen Blog
+<br>
 
-- [대한민국 코로나 바이러스 현황 파악](docs/corona/corona.html)
-- [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
-- [Github Commit Graph](docs/git_commit_vis/gg_vis.html)
-- [ggplot2 버전 업데이트 리뷰](docs/News/ggplot2_330.html)
+
+<p align="center">
+  <img src="Gareth_Frank_Bale.PNG" width="180" height="180"> <br>
+  <font size= 5><b>미완성의신</b></font>
+</p>
+
+
+<br>
+<br>
+
+
+# Tech set
+
+### [대한민국 코로나 바이러스 현황 파악](docs/corona/corona.html)
+### [Github Commit Graph](docs/git_commit_vis/gg_vis.html)
+
+<br>
+
+# Kaggle
+
+### [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
+
+<br>
+
+# News
+
+### [ggplot2 버전 업데이트 리뷰](docs/News/ggplot2_330.html)
+
+<br>
+
+# Book Review
+
+
+
