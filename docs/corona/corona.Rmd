@@ -106,10 +106,6 @@ korpop2020$pop2020 <- as.numeric(korpop2020$pop2020)
 # 코로나 데이터 추출
 corona_0301 <- read_xlsx("corona19_kr_20200301.xlsx")
 
-corona_0301 %>% 
-  select(구분, `확진환자 (명)`,`검사현황 (명)`) %>% 
-  filter(!구분 %in% c(NA,"합계", "검역"))
-
 corona_0301 <- corona_0301 %>% 
   select(구분, `확진환자 (명)`,`검사현황 (명)`) %>% 
   filter(!구분 %in% c(NA,"합계", "검역"))
