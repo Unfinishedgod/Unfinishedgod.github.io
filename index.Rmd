@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 <p align="center">
-  <img src="Gareth_Frank_Bale.PNG" width="180" height="180"> <br>
+  <img src="Gareth_Frank_Bale_circle_index.png" width="180" height="180"> <br>
   <font size= 5><b>미완성의신</b></font>
 </p>
 
@@ -24,6 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Tech set
 
+### [대한민국 코로나 Dashboard](docs/flexdashboard_shiny/flexdashboard_shiny.html)
 ### [대한민국 코로나 바이러스 현황 파악](docs/corona/corona.html)
 ### [Github Commit Graph](docs/git_commit_vis/gg_vis.html)
 
