@@ -793,7 +793,7 @@ Reference
 =======================================================================
 **0. 데이터 **
 
-- 공공데이터 포털 - 코로나 : ohttps://www.data.go.kr/issues/3/show.do
+- 공공데이터 포털 - 코로나 : https://www.data.go.kr/issues/3/show.do
 
 **1. Flexdashboard 참고 자료**
 
