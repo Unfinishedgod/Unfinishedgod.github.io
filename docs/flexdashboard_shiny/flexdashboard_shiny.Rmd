@@ -33,6 +33,20 @@ color:white!important;
 </style>
 
 
+<head>
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-145407326-3', 'auto');
+ga('send', 'pageview');
+
+</script>
+</head>
+
+
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(readr)
@@ -582,13 +596,13 @@ df_plotly <- asdf_2 %>%
 df_plotly %>% 
   plot_ly(
     x = ~시도,
-    y = ~농협,
+    y = ~약국,
     type = "bar",
-    name = "농협",
+    name = "약국",
     textposition = 'auto',
     marker = list(color = 'green')
   ) %>% 
-  add_trace(y = ~약국,
+  add_trace(y = ~우체국,
             name = "우체국",
             textposition = 'auto',
             marker = list(color = 'orange')) %>% 
@@ -669,13 +683,13 @@ df_plotly <- df_plotly %>%
 df_plotly %>% 
   plot_ly(
     x = ~시군구,
-    y = ~농협,
+    y = ~약국,
     type = "bar",
-    name = "농협",
+    name = "약국",
     textposition = 'auto',
     marker = list(color = 'green')
   ) %>% 
-  add_trace(y = ~약국,
+  add_trace(y = ~우체국,
             name = "우체국",
             textposition = 'auto',
             marker = list(color = 'orange')) %>% 
@@ -758,13 +772,13 @@ df_plotly <- df_plotly %>%
 df_plotly %>% 
   plot_ly(
     x = ~시군구,
-    y = ~농협,
+    y = ~약국,
     type = "bar",
-    name = "농협",
+    name = "약국",
     textposition = 'auto',
     marker = list(color = 'green')
   ) %>% 
-  add_trace(y = ~약국,
+  add_trace(y = ~우체국,
             name = "우체국",
             textposition = 'auto',
             marker = list(color = 'orange')) %>% 
