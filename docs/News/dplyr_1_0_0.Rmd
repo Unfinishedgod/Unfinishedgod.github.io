@@ -23,12 +23,12 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 </p>
 
 - https://www.tidyverse.org/blog/2020/03/dplyr-1-0-0-is-coming-soon/?fbclid=IwAR1FzK7XeoDMBgzbA1-IYr5-ir-kqtdnVqSL3-6vCWCcAjHeHJlfuB0YCak
-- https://dplyr.tidyverse.org/dev/articles/rowwise.html
-- https://dplyr.tidyverse.org/dev/articles/colwise.html
-- https://dplyr.tidyverse.org/dev/reference/summarise.html
-- https://dplyr.tidyverse.org/dev/reference/select.html
-- https://dplyr.tidyverse.org/dev/reference/relocate.html
-- https://dplyr.tidyverse.org/dev/articles/programming.html
+- [rowwise()](https://dplyr.tidyverse.org/dev/articles/rowwise.html)
+- [colwise()](https://dplyr.tidyverse.org/dev/articles/colwise.html)
+- [summarise()](https://dplyr.tidyverse.org/dev/reference/summarise.html)
+- [select()](https://dplyr.tidyverse.org/dev/reference/select.html)
+- [relocate()](https://dplyr.tidyverse.org/dev/reference/relocate.html)
+- [Programming with dplyr](https://dplyr.tidyverse.org/dev/articles/programming.html)
 
 ---
 
