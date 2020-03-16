@@ -1,5 +1,5 @@
 ---
-title: "dplyr 1.0.0 Update Review(Doing)"
+title: "dplyr 1.0.0 Update Review"
 author: "최의용"
 date: '`r Sys.Date()`'
 output: 
