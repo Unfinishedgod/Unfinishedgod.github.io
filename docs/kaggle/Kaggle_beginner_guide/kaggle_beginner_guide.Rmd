@@ -27,7 +27,7 @@ output:
  
  
  
-# ㅁㄴㅇㄹ
+# 캐글 대회 파악
 ```{r}
 "  html_document:
    prettydoc::html_pretty:
