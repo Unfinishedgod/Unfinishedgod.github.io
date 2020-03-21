@@ -94,8 +94,27 @@ ga('send', 'pageview');
 
 # 캐글 입문 시작
 
-지금부터가 **본론**이다. 사실 위 이야기는 가입부터 약 5분이면 간단하게 확인할 수 있는 내용이고, 지금부터 진입장벽을 깰 수 있는 이야기를 해보려 한다.
+지금부터가 **본론**이다. 사실 위 이야기는 가입부터 약 5분이면 간단하게 확인할 수 있는 내용이고, 지금부터 진입장벽을 깰 수 있는 이야기를 해보려 한다. Titanic를 예시로 들었으니, 어떻게 Titanic를 가지고 공부를 하는게 좋을지 알아보도록 하자. 
 
+<br>
+
+## 필사를 위한 자료 수집
+
+캐글을 하려면 처음엔 필사를 하라고 하는데, 어떻게 필사를 하는게 좋을까? 다른사람들이 작업 결과들을 공부 하는게 가장 효과적이다. 다음 그림은 Titanic에 올라온 Notebook을 확인 하는 절차를 나타냈다.
+
+### 
+ 
+<center>
+![](kaggle_notebook_guide.png){#id .class width="90%"}
+</center>
+
+<center>
+![](kaggle_notebook_list.png){#id .class width="90%"}
+</center>
+
+<center>
+![](kaggle_notebooks.png){#id .class width="90%"}
+</center>
 
 
 ---
