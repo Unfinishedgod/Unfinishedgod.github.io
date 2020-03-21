@@ -48,7 +48,7 @@ ga('send', 'pageview');
 
 # Kaggle
 
-- #### 2020-03-21 [Kaggle Beginner Guidr](docs/kaggle/Kaggle_beginner_guide/kaggle_beginner_guide.html)
+<!-- - #### 2020-03-22 [Kaggle Beginner Guide](docs/kaggle/Kaggle_beginner_guide/kaggle_beginner_guide.html) -->
 - #### 2020-03-11 [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
 
 <br>

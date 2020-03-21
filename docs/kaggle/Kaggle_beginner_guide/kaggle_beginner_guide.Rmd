@@ -44,7 +44,7 @@ ga('send', 'pageview');
  
 <br><br>
 
-# 캐글 기본 환경 파악
+## 캐글 기본 환경 파악
 
 - 우선 회원가입부터 해보자. 캐글 우측 상단에 Register 버튼을 클릭하면 회원가입 절차 View로 넘어 가는데 되도록이면 gmail로 가입하는걸 권한다. 
 
@@ -98,23 +98,80 @@ ga('send', 'pageview');
 
 <br>
 
-## 필사를 위한 자료 수집
+## 자료 수집
 
-캐글을 하려면 처음엔 필사를 하라고 하는데, 어떻게 필사를 하는게 좋을까? 다른사람들이 작업 결과들을 공부 하는게 가장 효과적이다. 다음 그림은 Titanic에 올라온 Notebook을 확인 하는 절차를 나타냈다.
-
-### 
- 
-<center>
-![](kaggle_notebook_guide.png){#id .class width="90%"}
-</center>
+캐글을 하려면 처음엔 필사를 하라고 하는데, 어떻게 필사를 하는게 좋을까? 다른사람들이 작업 결과들을 공부 하는게 가장 효과적이다. 다음 그림은 Titanic에 올라온 Notebook을 확인 하는 절차를 나타냈다. 쓰던 도중 책에 관해서 소크라테스의 명언이 생각이 나, 같이 소개 한다. <br>
 
 <center>
-![](kaggle_notebook_list.png){#id .class width="90%"}
+**다른 사람이 쓴 책을 읽는 일로 시간을 보내라. 다른사람이 고생을 하면서 깨우치는 것을 보고 쉽게 자신을 개선시킬 수 있다.** <br>
+**- 소크라테스** <br>
 </center>
 
+
+### Step 1
+
 <center>
-![](kaggle_notebooks.png){#id .class width="90%"}
+![](kaggle_notebook_guide.png){#id .class width="80%"}
 </center>
+
+### Step 2
+
+<center>
+![](kaggle_notebook_list.png){#id .class width="80%"}
+</center>
+
+### Step 3
+
+<center>
+![](kaggle_notebooks.png){#id .class width="80%"}
+</center>
+
+## 제출
+
+<center>
+![](submit_data.png){#id .class width="80%"}
+</center>
+
+## Notebook 작성
+
+### Step 1
+
+<center>
+![](create_notebook_1.PNG){#id .class width="80%"}
+</center>
+
+### Step 2
+
+<center>
+![](create_notebook_2.PNG){#id .class width="80%"}
+</center>
+
+### Step 3
+
+<center>
+![](create_notebook_3.PNG){#id .class width="80%"}
+</center>
+
+### Step 4
+
+<center>
+![](create_notebook_4.PNG){#id .class width="80%"}
+</center>
+
+### Step 5
+
+<center>
+![](create_notebook_5.PNG){#id .class width="80%"}
+</center>
+
+### Step 6
+
+<center>
+![](create_notebook_6.PNG){#id .class width="80%"}
+</center>
+
+
+# Kaggle Tier System
 
 
 ---
