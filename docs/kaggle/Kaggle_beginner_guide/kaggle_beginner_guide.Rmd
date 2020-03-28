@@ -333,12 +333,55 @@ competition 메달은 캐글 대회에서 얼마나 성적을 내는가로 집�
 - 은메달: 추천 5개 
 - 금메달: 추천 10개
 
+
+# **캐글 데이터셋 정리**
+
+다음은 캐글에 존재 하는 Competation과 Dataset들을 적당한 카테고리로 분류 해놓은 리스트다. 여기서 하나씩 해나가면 될것 같다. 
+
+## **Regression**
+
+- [캐글 Regression 검색 리스트](https://www.kaggle.com/competitions?sortBy=relevance&group=general&search=regression&page=1&pageSize=20)
+- [House-price-advanced-regression](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
+- [Bike-sharing-demand](https://www.kaggle.com/c/bike-sharing-demand)
+
+## **Classification**
+
+- [캐글 Classification 검색 리스트](https://www.kaggle.com/competitions?sortBy=relevance&group=general&search=classification&page=1&pageSize=20)
+- [San Francisco Crime Classification](https://www.kaggle.com/c/sf-crime)
+- [Ieee Fraud Dection](https://www.kaggle.com/c/ieee-fraud-detection)
+
+## **Recommendation**
+
+- [캐글 Recommendation 검색 리스트](https://www.kaggle.com/competitions?sortBy=relevance&group=general&search=Recommendation&page=1&pageSize=20)
+- [Santander Product Recommendation](https://www.kaggle.com/c/santander-product-recommendation)
+- [WSDM - KKBox's Music Recommendation Challenge](https://www.kaggle.com/c/kkbox-music-recommendation-challenge/overview)
+- [Expedia Hotel Recommendations](https://www.kaggle.com/c/expedia-hotel-recommendations/overview)
+- [Elo Merchant Category Recommendation](https://www.kaggle.com/c/elo-merchant-category-recommendation/notebooks?sortBy=hotness&group=everyone&pageSize=20&competitionId=10445&language=R)
+- [영화 추천 데이터](https://www.kaggle.com/rounakbanik/the-movies-dataset)
+
+## **Finance**
+
+- [캐글 Finance 리스트](https://www.kaggle.com/search?q=finance+in%3Acompetitions)
+
+## **COBID19**
+
+- [CORD-19-research-challenge](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge)
+- [novel-corona-virus-2019-dataset](https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset)
+
+## **NLP**
+
+- [Bert List](https://www.kaggle.com/search?q=Bert)
+- [Real or Not? NLP with Disaster Tweets](https://www.kaggle.com/c/nlp-getting-started)
+- [google-quest-challenge](https://www.kaggle.com/c/google-quest-challenge)
+
+
 # **총평**
 
 캐글이란것을 알게 된지 2년이 넘게 흘렀고, 캐글을 시도 하려다 실패 했던것이 두번이 지났고, 마지막 실패로부터 8개월정도가 흘렀다. 당시에 잠깐 다른 더 중요한걸 하느라 캐글을 접어 두었는데 이번에 하나씩 시행착오 겪어 보면서 느끼는것이 생각보다 더 진입장벽이 크다는 것이었다. 이제 어느정도 진입장벽은 허물었으니 일단은 Expert먼저 목표로 잡아야 겠다.
 
 ---
 
-Rmardwon 문서 작성 참고
-- [데이터 과학을 위한 저작도구](https://statkclee.github.io/comp_document/rmarkdown-in-production.html)
+# Reference
 
+- [데이터 과학을 위한 저작도구](https://statkclee.github.io/comp_document/rmarkdown-in-production.html)
+- [이유한님 정리 데이터](https://kaggle-kr.tistory.com/32?category=868318&fbclid=IwAR3rtsYpJPlbrbdwBwSgtSow1CFzp4n1X9-zgYUI80Act2eJr--2lxJYaXQ)
