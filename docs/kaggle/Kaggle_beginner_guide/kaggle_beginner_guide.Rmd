@@ -333,6 +333,8 @@ competition 메달은 캐글 대회에서 얼마나 성적을 내는가로 집�
 - 은메달: 추천 5개 
 - 금메달: 추천 10개
 
+<br><br>
+
 
 # **캐글 데이터셋 정리**
 
@@ -347,6 +349,7 @@ competition 메달은 캐글 대회에서 얼마나 성적을 내는가로 집�
 ## **Classification**
 
 - [캐글 Classification 검색 리스트](https://www.kaggle.com/competitions?sortBy=relevance&group=general&search=classification&page=1&pageSize=20)
+- [Titanic: Machine Learning from Disaster](https://www.kaggle.com/c/titanic)
 - [San Francisco Crime Classification](https://www.kaggle.com/c/sf-crime)
 - [Ieee Fraud Dection](https://www.kaggle.com/c/ieee-fraud-detection)
 
@@ -374,6 +377,7 @@ competition 메달은 캐글 대회에서 얼마나 성적을 내는가로 집�
 - [Real or Not? NLP with Disaster Tweets](https://www.kaggle.com/c/nlp-getting-started)
 - [google-quest-challenge](https://www.kaggle.com/c/google-quest-challenge)
 
+<br><br>
 
 # **총평**
 
