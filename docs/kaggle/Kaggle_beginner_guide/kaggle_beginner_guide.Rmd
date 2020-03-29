@@ -366,7 +366,7 @@ competition 메달은 캐글 대회에서 얼마나 성적을 내는가로 집�
 
 - [캐글 Finance 리스트](https://www.kaggle.com/search?q=finance+in%3Acompetitions)
 
-## **COBID19**
+## **COVID19**
 
 - [CORD-19-research-challenge](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge)
 - [novel-corona-virus-2019-dataset](https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset)
