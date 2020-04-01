@@ -1,0 +1,40 @@
+---
+title: "[AWS] EC2 구축 하기"
+output: 
+  html_document:
+    theme: default
+    toc: true
+    toc_float: true
+    number_sections: TRUE
+---
+
+<head>
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-145407326-3', 'auto');
+ga('send', 'pageview');
+
+<meta name="google-site-verification" content="T-jgE28abL3vl7UecFzARwl7_S3qC_ppH4TxxFwQcjs" />
+
+</script>
+</head>
+
+
+
+<br>
+
+데이터 분석을 위한 AWS사용 가이드를 써보려 한다. AWS는 Amazon Web Service의 준말로 **어디어디**에서 표현하기를 Cloud Cloud Cloud 라고들 표현 하는데, 이를 그나마 좀 쉽게 표현을 해보자면 **허공에 풍선달린 컴퓨터를 하나 띄워놓고, 필요할때마다 가져와서 사용하는 개념?** 정도로 생각을 하면 좋을 것 같다. 그동안 최소한의 기능만을 사용해보다가 이번에 좀 더 적극적으로 사용할 계기가 생겨 공부도 할겸 정리도 하는 시간을 가져 보려고 한다. EC2부터 시작해서, 리눅스 운영체제 에서 R/Python 설치, S3 스토리지, RDS 등등 여러가지를 하나씩 써내려 가면서도 추가로 AWS 생태계에 관심을 가지고 공부를 하면 될것 같다. 이번에는 우선 EC2를 구축하여 하나의 서버를 띄우는 내용을 적어보려 한다.
+
+<center>
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/512px-Amazon_Web_Services_Logo.svg.png){#id .class width="50%"}
+</center>
+
+# EC2 란? 
+
+Elastic Compute Cloud의 준말로 가상의 운영체제를 만들어 이곳에서 R/python 을 설치에 분석 환경을 가추어 나갈 생각이다.
+
+# 
