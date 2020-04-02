@@ -4,7 +4,6 @@ output:
     theme: default
     toc: true
     toc_float: true
-    number_sections: TRUE
 ---
 
 <head>
@@ -22,11 +21,8 @@ ga('send', 'pageview');
 </script>
 </head>
 
-<center>
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/512px-Amazon_Web_Services_Logo.svg.png){#id .class width="50%"}
-</center>
 
-<br>
+
 
 <p align="center">
 <br>
@@ -34,6 +30,12 @@ ga('send', 'pageview');
 **[AWS] EC2 구축 하기** 
 </font>
 </p>
+
+<br>
+
+<center>
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/512px-Amazon_Web_Services_Logo.svg.png){#id .class width="30%"}
+</center>
 
 <br><br>
 
@@ -48,10 +50,147 @@ ga('send', 'pageview');
  
  등등 여러가지를 하나씩 써내려 가면서도 추가로 AWS 생태계에 관심을 가지고 공부를 하면 될것 같다. 이번에는 우선 EC2를 구축하여 하나의 서버를 띄우는 내용을 적어보려 한다.
 
-
+<br>
 
 # EC2 란? 
 
 Elastic Compute Cloud의 준말로 가상의 운영체제를 만들어 사용가능하게 해주는 서비스 라고 보면 된다. 이제 부터 이곳에 R/python 을 설치에 분석 환경을 가추어 나갈 생각이다. 설치 과정을 하나씩 알아보자.
 
-# 
+# Step1
+
+<center>
+![](step_1.PNG){#id .class width='70%'}
+</center>
+
+# Step2
+
+<center>
+![](step_2.PNG){#id .class width='70%'}
+</center>
+
+# Step3
+
+<center>
+![](step_3.PNG){#id .class width='70%'}
+</center>
+
+# Step4
+
+<center>
+![](step_4.PNG){#id .class width='70%'}
+</center>
+
+
+# Step5
+
+<center>
+![](step_5.PNG){#id .class width='70%'}
+</center>
+
+# Step 6
+
+<center>
+![](step_6.PNG){#id .class width='70%'}
+</center>
+
+# Step 7
+
+<center>
+![](step_7.PNG){#id .class width='70%'}
+</center>
+
+# Step 8
+
+<center>
+![](step_8.PNG){#id .class width='70%'}
+</center>
+
+# Step 9
+
+<center>
+![](step_9.PNG){#id .class width='70%'}
+</center>
+
+# Step 10
+
+<center>
+![](step_10.PNG){#id .class width='70%'}
+</center>
+
+# Step 11
+
+<center>
+![](step_11.PNG){#id .class width='70%'}
+</center>
+
+# Step 12
+
+<center>
+![](step_12.PNG){#id .class width='70%'}
+</center>
+
+# Step 13
+
+<center>
+![](step_13.PNG){#id .class width='70%'}
+</center>
+
+# Step 14
+
+<center>
+![](step_14.PNG){#id .class width='70%'}
+</center>
+
+# Step 15
+
+<center>
+![](step_15.PNG){#id .class width='70%'}
+</center>
+
+# Step 16
+
+<center>
+![](step_16.PNG){#id .class width='70%'}
+</center>
+
+# Step 17
+
+<center>
+![](step_18.PNG){#id .class width='70%'}
+</center>
+
+# Step 18
+
+<center>
+![](step_18.PNG){#id .class width='70%'}
+</center>
+
+# Step 19
+
+<center>
+![](step_19.PNG){#id .class width='70%'}
+</center>
+
+# Step 20
+
+<center>
+![](step_20.PNG){#id .class width='70%'}
+</center>
+
+# Step 21
+
+<center>
+![](step_21.PNG){#id .class width='70%'}
+</center>
+
+# Step 22
+
+<center>
+![](step_22.PNG){#id .class width='70%'}
+</center>
+
+# Step 23
+
+<center>
+![](step_23.PNG){#id .class width='70%'}
+</center>
