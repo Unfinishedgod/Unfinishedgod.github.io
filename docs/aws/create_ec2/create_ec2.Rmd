@@ -2,8 +2,8 @@
 output: 
   html_document:
     theme: default
-    toc: true
-    toc_float: true
+    # toc: true
+    # toc_float: true
 ---
 
 <head>
@@ -59,138 +59,138 @@ Elastic Compute Cloud의 준말로 가상의 운영체제를 만들어 사용가
 # Step1
 
 <center>
-![](step_1.PNG){#id .class width='70%'}
+![](step_1.PNG){#id .class width='100%'}
 </center>
 
 # Step2
 
 <center>
-![](step_2.PNG){#id .class width='70%'}
+![](step_2.PNG){#id .class width='100%'}
 </center>
 
 # Step3
 
 <center>
-![](step_3.PNG){#id .class width='70%'}
+![](step_3.PNG){#id .class width='100%'}
 </center>
 
 # Step4
 
 <center>
-![](step_4.PNG){#id .class width='70%'}
+![](step_4.PNG){#id .class width='100%'}
 </center>
 
 
 # Step5
 
 <center>
-![](step_5.PNG){#id .class width='70%'}
+![](step_5.PNG){#id .class width='100%'}
 </center>
 
 # Step 6
 
 <center>
-![](step_6.PNG){#id .class width='70%'}
+![](step_6.PNG){#id .class width='100%'}
 </center>
 
 # Step 7
 
 <center>
-![](step_7.PNG){#id .class width='70%'}
+![](step_7.PNG){#id .class width='100%'}
 </center>
 
 # Step 8
 
 <center>
-![](step_8.PNG){#id .class width='70%'}
+![](step_8.PNG){#id .class width='100%'}
 </center>
 
 # Step 9
 
 <center>
-![](step_9.PNG){#id .class width='70%'}
+![](step_9.PNG){#id .class width='100%'}
 </center>
 
 # Step 10
 
 <center>
-![](step_10.PNG){#id .class width='70%'}
+![](step_10.PNG){#id .class width='100%'}
 </center>
 
 # Step 11
 
 <center>
-![](step_11.PNG){#id .class width='70%'}
+![](step_11.PNG){#id .class width='100%'}
 </center>
 
 # Step 12
 
 <center>
-![](step_12.PNG){#id .class width='70%'}
+![](step_12.PNG){#id .class width='100%'}
 </center>
 
 # Step 13
 
 <center>
-![](step_13.PNG){#id .class width='70%'}
+![](step_13.PNG){#id .class width='100%'}
 </center>
 
 # Step 14
 
 <center>
-![](step_14.PNG){#id .class width='70%'}
+![](step_14.PNG){#id .class width='100%'}
 </center>
 
 # Step 15
 
 <center>
-![](step_15.PNG){#id .class width='70%'}
+![](step_15.PNG){#id .class width='100%'}
 </center>
 
 # Step 16
 
 <center>
-![](step_16.PNG){#id .class width='70%'}
+![](step_16.PNG){#id .class width='100%'}
 </center>
 
 # Step 17
 
 <center>
-![](step_18.PNG){#id .class width='70%'}
+![](step_18.PNG){#id .class width='100%'}
 </center>
 
 # Step 18
 
 <center>
-![](step_18.PNG){#id .class width='70%'}
+![](step_18.PNG){#id .class width='100%'}
 </center>
 
 # Step 19
 
 <center>
-![](step_19.PNG){#id .class width='70%'}
+![](step_19.PNG){#id .class width='100%'}
 </center>
 
 # Step 20
 
 <center>
-![](step_20.PNG){#id .class width='70%'}
+![](step_20.PNG){#id .class width='100%'}
 </center>
 
 # Step 21
 
 <center>
-![](step_21.PNG){#id .class width='70%'}
+![](step_21.PNG){#id .class width='100%'}
 </center>
 
 # Step 22
 
 <center>
-![](step_22.PNG){#id .class width='70%'}
+![](step_22.PNG){#id .class width='100%'}
 </center>
 
 # Step 23
 
 <center>
-![](step_23.PNG){#id .class width='70%'}
+![](step_23.PNG){#id .class width='100%'}
 </center>
