@@ -16,10 +16,12 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=10, fig.height = 8)
 ```
 
+<br>
+
 <p align="center">
-  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/5407/media/housesbanner.png"><br>
+  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/5407/media/housesbanner.png"> <br><br>
     <b>Bike Sharing Demand 링크: [house-prices-advanced-regression-techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)</b><br>
-  <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Kaggle/blob/master/Bike_Sharing_Demand/Bike_Sharing_Demand.Rmd)</b><br>
+  <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Unfinishedgod.github.io/blob/master/docs/kaggle/house_prices_boston_regression/house_price_boston_regression.Rmd)</b><br>
 </p>
 
 <br>
