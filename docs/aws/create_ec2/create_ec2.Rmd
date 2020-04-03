@@ -1,9 +1,9 @@
 ---
 output: 
   html_document:
-    theme: default
-    # toc: true
-    # toc_float: true
+    theme: simplex
+    toc: true
+    toc_float: true
 ---
 
 <head>
@@ -27,7 +27,7 @@ ga('send', 'pageview');
 <p align="center">
 <br>
 <font size="10">
-**[AWS] EC2 구축 하기** 
+**[AWS] EC2 구축 하기(Doing)** 
 </font>
 </p>
 

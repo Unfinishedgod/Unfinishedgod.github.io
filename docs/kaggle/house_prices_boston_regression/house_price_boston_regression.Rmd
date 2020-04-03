@@ -1,0 +1,30 @@
+---
+title: "House Prices: Advanced Regression Techniques"
+author: "최의용"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    highlight: textmate
+    theme: simplex
+    toc: true
+    toc_float: true
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=10, fig.height = 8)
+```
+
+<p align="center">
+  <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/5407/media/housesbanner.png"><br>
+    <b>Bike Sharing Demand 링크: [house-prices-advanced-regression-techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)</b><br>
+  <b>Github Code: [Unifinished God/Kaggle](https://github.com/Unfinishedgod/Kaggle/blob/master/Bike_Sharing_Demand/Bike_Sharing_Demand.Rmd)</b><br>
+</p>
+
+<br>
+
+```{r}
+getwd()
+```
+
