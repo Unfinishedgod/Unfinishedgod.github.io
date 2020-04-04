@@ -27,7 +27,7 @@ ga('send', 'pageview');
 <p align="center">
 <br>
 <font size="10">
-**[AWS] EC2 구축 하기(Doing)** 
+**[AWS] EC2 구축 하기** 
 </font>
 </p>
 
