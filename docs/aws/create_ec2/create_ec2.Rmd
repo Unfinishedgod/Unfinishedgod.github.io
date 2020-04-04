@@ -56,141 +56,268 @@ ga('send', 'pageview');
 
 Elastic Compute Cloud의 준말로 가상의 운영체제를 만들어 사용가능하게 해주는 서비스 라고 보면 된다. 이제 부터 이곳에 R/python 을 설치에 분석 환경을 가추어 나갈 생각이다. 설치 과정을 하나씩 알아보자.
 
-# Step1
+<br>
+
+# Step 1. 인스턴스 생성
+
+<br>
+
+<div class = "row">
+  <div class = "col-md-6">
+
+서비스 -> EC2 클릭 
 
 <center>
-![](step_1.PNG){#id .class width='100%'}
+![](step_1.PNG){#id .class width="85%"}
 </center>
 
-# Step2
+  </div>
+  <div class = "col-md-6">
+인스턴스 메뉴 -> 인스턴스 시작 클릭
 
 <center>
-![](step_2.PNG){#id .class width='100%'}
+![](step_2.PNG){#id .class width="100%"}
 </center>
 
-# Step3
+  </div>
+</div>
+
+<br>
+
+# Step 2. 인스턴스 옵션 설정
+
+인스턴스 옵션을 정해주자. 좀 비유를 해보자면 컴퓨터를 살때 사양을 선택 하는 과정이다.
+
+<br>
+
+## 1. AMI 선택
+
+우선 AMI를 선택 해주자. 기본적으로 여러 운영체제가 있지만 **Amozon Linux 2**를 선택해서 실행하자.
 
 <center>
 ![](step_3.PNG){#id .class width='100%'}
 </center>
 
-# Step4
+<br>
+
+## 2. 인스턴스 유형 선택
+
+이제 인스턴스 유형을 선택 하자. 아마존은 기본적으로 프리티어(무료)로 서비스를 제공 한다. 그러나 프리티어는 어디까지나 최소한의 서비스라 사양이 매우 좋지 않다. 우선은 프리티어로 선택 하고 다음 블로그에는 인스턴스를 업그레이드 하는 내용을 적어보려 한다.
 
 <center>
 ![](step_4.PNG){#id .class width='100%'}
 </center>
 
+<br>
 
-# Step5
+## 3. 인스턴스 구성
+
+퍼블링 IP 자동 할당에 Select Box 옵션을 활성화 로 변경 해준다. 
 
 <center>
 ![](step_5.PNG){#id .class width='100%'}
 </center>
 
-# Step 6
+<br>
+
+## 4. 스토리지 추가
+
+내 운영체제의 기본적인 용량이 8GB로 되어 있다. 아마존은 무료로 최대 30GB까지 지원 가능하며 일단은 기본 8GB로 선택을 해주도록 하자. 이 역시 다음 블로그에 한꺼번에 용량 설정 하는 방법을 포스팅 하려고 한다.
 
 <center>
 ![](step_6.PNG){#id .class width='100%'}
 </center>
 
-# Step 7
+<br>
+
+## 5. 태그 추가
+
+특별한 내용이 없으니 다음 버튼
 
 <center>
 ![](step_7.PNG){#id .class width='100%'}
 </center>
 
-# Step 8
+<br>
+
+## 6. 보안 그룹 구성
+
+이곳에서 포트 범위를 설정 해주자. 기본적으로 여기에 R studio server / Jupyter notebook를 설치 해줄것이므로 다음의 포트를 열어 준다. 그리고 위치 무관 옵션을 선택 해주자. 
+
+- R studio server: 8787
+- Jupyter notebook: 8888
 
 <center>
 ![](step_8.PNG){#id .class width='100%'}
 </center>
 
-# Step 9
+<br>
 
-<center>
-![](step_9.PNG){#id .class width='100%'}
-</center>
+## 7. 검토
 
-# Step 10
+이제 시작하기 버튼을 누르면 팝업창이 노출되면서 키 페어를 생성하도록 유도 한다. 이는 후에 putty에 사용할 ppk를 생성하기 위한 과정이며 적당한 네이밍으로 키페어를 다운 받고 인스턴스 시작을 클릭 해주자.
 
 <center>
 ![](step_10.PNG){#id .class width='100%'}
 </center>
 
-# Step 11
+<br>
+
+
+## 인스턴스 생성
+
+우선 다음과 같이 인스턴스가 생성됨을 확인 할 수 있다. 이제 다음으로 넘어가자. 
 
 <center>
 ![](step_11.PNG){#id .class width='100%'}
 </center>
 
-# Step 12
+<br><br>
+
+# Step 3. 탄력적 IP 생성
+
+서버(인스턴스)가 생성되었고, 이를 실행하는데 그전에 추가로 해야할 것이 있다. **탄력적 IP** 라는 것을 설정 해주어야 하는데, 이 인스턴스에서 설정된 **퍼블릭 DNS**는 서버를 키고 끌때마다 새로운 것으로 갱신되기에, 이를 하나의 IP로 통일하기 위함이다. 자세한 이해는 되도록 **넘어가고** 바로 알아보자.
+
+<br>
+
+## 탄력적 IP 주소 할당
+
+네트워크 및 보안 -> 탄력적 IP에 탄력적 IP 주소 할당 버튼 클릭
 
 <center>
 ![](step_12.PNG){#id .class width='100%'}
 </center>
 
-# Step 13
+<br>
+
+## 탄력적 IP 주소 확인
+
+생성된 IP 주소를 클릭해주자. 이를 생성한 인스턴스에 연결하는 작업을 진행할 것이다.
 
 <center>
 ![](step_13.PNG){#id .class width='100%'}
-</center>
+</center>릭
 
-# Step 14
+<br>
+
+## 탄력적 IP 정보 확인
+
+탄력적 IP의 정보를 확인해주자. 특별한건 없고 바로 **탄력적 IP 연결**버튼 클ㄹ
 
 <center>
 ![](step_14.PNG){#id .class width='100%'}
 </center>
 
-# Step 15
+<br>
+
+## 탄력적 IP 주소 연결
+
+이제 생성한 인스턴스에 탄력적 IP를 연결해주자. 인스턴스 Select box에 생성한 인스턴스 네임을 선택하고 연결 버튼 클릭
 
 <center>
 ![](step_15.PNG){#id .class width='100%'}
 </center>
 
-# Step 16
+<br>
+
+## 탄쳑적 IP 주소 확인
 
 <center>
-![](step_16.PNG){#id .class width='100%'}
+![](step_16.PNG){#id .class width='70%'}
 </center>
 
-# Step 17
+<br><br>
+
+# Step 4. Putty 접근
+
+이제 인스턴스를 구체화 해서 접근 해보자. 이를 위해 Putty를 설치 하고 여러 세팅을 해주도록 한다.
+
+<br>
+
+## Download Putty/Puttygen
+
+Putty와 Puttygen을 다운받도록 하자. Puttygen은 키페어를 .ppk로 만들기 위함이고 putty는 만들어진 .ppk를 가지고 서버를 실행하기 위함이다. 다운로드 주소는 다음같다.
+
+- [Download PuTTY: latest release (0.73)](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+
+<center>
+![](step_17.PNG){#id .class width='80%'}
+</center>
+
+<br>
+
+## Puttygen 1
+
+- Pyttygen을 실행 하고 Load 버튼 클릭
+- 다운로드 폴더에 키페어 선택 하고 열기 버튼 (옵션은 **All File**)
 
 <center>
 ![](step_18.PNG){#id .class width='100%'}
 </center>
 
-# Step 18
+<br>
+
+## Puttygen 2
+
+이제 aws에서 받은 키페어를 가지고 .ppk로 변환 하는 마지막 작업이다. Save private key 버튼을 클릭하고 나오는 확인 창에 예 버튼을 해서 마무리를 해주자.
 
 <center>
-![](step_18.PNG){#id .class width='100%'}
+![](step_19.PNG){#id .class width='80%'}
 </center>
 
-# Step 19
+<br>
 
-<center>
-![](step_19.PNG){#id .class width='100%'}
-</center>
+## Putty 세팅
 
-# Step 20
+이제 Putty에 가서 세팅을 마무리 하자. putty를 실행하고 다음의 절차를 따라주자. 
+
+- 왼쪽 카테고리에 SSH - Auth 클릭
+- Browwe 버튼 클릭
+- Puttygen에서 생성한 .ppk 클릭 
 
 <center>
 ![](step_20.PNG){#id .class width='100%'}
 </center>
 
-# Step 21
+<br>
+
+## Save / Open 
+
+이제 다음의 절차를 밟은 후에 putty를 실행 해주자. 
+
+- Host name: ec2-user@(탄력적 IP)
+- Saved Sessions: 저장할 이름 
+
+이렇게 설정한후 Save를 해주어야 다음에 Putty에서 실행 할때 저장된 이름으로 쉽게 서버를 실행할 수 있다.
 
 <center>
-![](step_21.PNG){#id .class width='100%'}
+![](step_21.PNG){#id .class width='80%'}
 </center>
 
-# Step 22
+<br><br>
+
+# 결과
+
+Putty에서 성공적으로 서버를 실행하면 다음과 같은 화면이 나오게 된다.
 
 <center>
-![](step_22.PNG){#id .class width='100%'}
+![](step_22.PNG){#id .class width='80%'}
 </center>
 
-# Step 23
+<br><br>
 
-<center>
-![](step_23.PNG){#id .class width='100%'}
+# 서버 시작/중지
+
+AWS EC2는 서버를 켜두면 그 만큼 금액이 지불되는 방식이다. 때문에 필요에 따라 서버를 꺼야 하는데, 인스턴스 우클릭후 다음의 시작/중지 버튼으로 시작과 중지를 꼭 해주도록 하자. 
+
+<center>  
+![](step_23.PNG){#id .class width='80%'}
 </center>
+
+---
+
+# 총평
+
+그동안 aws ec2에서 rstudio server 구축 하는 블로그를 쓰겠다고 다짐만 한지 18개월이 지났다. 하려면 5분이면 충분히 할수 있는데 반해, 블로글르 끄기 위해서는 스크린샷을 23개나 찍어서 하나하나 설명 해야해서 나도 모르게 미뤄뒀다. 사실 그만큼 처음 하는사람에게는 진입장벽이 커서, 시도조차 모하는 사람이 있을텐데 잘 따라해서 성공적으로 aws생태계에 들어왔으면 하는 바램이다.
+
+<br>
