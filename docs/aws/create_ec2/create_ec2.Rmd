@@ -22,15 +22,6 @@ ga('send', 'pageview');
 </head>
 
 
-
-
-<p align="center">
-<br>
-<font size="10">
-**[AWS] EC2 구축 하기** 
-</font>
-</p>
-
 <br>
 
 <center>
