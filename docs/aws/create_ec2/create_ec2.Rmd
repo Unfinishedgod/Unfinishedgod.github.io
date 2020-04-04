@@ -1,4 +1,5 @@
 ---
+title: "[AWS] EC2 구축 하기"
 output: 
   html_document:
     theme: simplex
