@@ -1,14 +1,49 @@
 ---
-title: ""
-author: ""
-date: ""
-output: html_document
+title: "미완성의신"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: scroll
+    social: menu
+    theme: default
+    storyboard: true
+    thumbnails: true
+    logo: Gareth_Frank_Bale_circle.png
+    favicon:  Gareth_Frank_Bale_circle.png
+    navbar:
+      - { icon: "fa-facebook-f", href: "https://www.facebook.com/shjj08", align: right }
+      - { icon: "fa-github", href: "https://github.com/Unfinishedgod", align: right }   
 ---
+
+<!-- --- -->
+<!-- title: "" -->
+<!-- author: "" -->
+<!-- date: "" -->
+<!-- output: html_document -->
+<!-- --- -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<style>
+.navbar {
+  background-color:#000000;
+  border-color:white;
+}
+.navbar-brand {
+color:white!important;
+}
+</style>
+
+<style type="text/css">
+
+.chart-title {  /* chart_title  */
+   font-size: 30px
+</style>
+
+
+ <div style = "padding: 0px 400px 1px 400px;">  
 
 
 <head>
@@ -32,8 +67,9 @@ ga('send', 'pageview');
 
 
 <p align="center">
-  <img src="Gareth_Frank_Bale_circle_index.png" width="180" height="180"> <br>
-  <font size= 5><b>미완성의신</b></font>
+  <img src="Gareth_Frank_Bale_circle_index.png" width="120" height="120"> <br>
+  <font size= 3><b>우리 인간은 미완성의 신들이다.</b></font> <br>
+  <font size= 3><b>뛰어난 데이터 과학자를 꿈꾸는. 책을 좋아하는. 그런 사람입니다.</b></font>
 </p>
 
 
@@ -41,7 +77,7 @@ ga('send', 'pageview');
 <br>
 
 
-# Tech set
+## Tech set
 
 - #### 2020-03-15 [대한민국 코로나 Dashboard](docs/flexdashboard_shiny/flexdashboard_shiny.html)
 - #### 2020-03-05 [대한민국 코로나 바이러스 현황 파악](docs/corona/corona.html)
@@ -49,23 +85,24 @@ ga('send', 'pageview');
 
 <br>
 
-# Kaggle
+## Kaggle
 
 - #### 2020-03-22 [Kaggle Beginner Guide](docs/kaggle/Kaggle_beginner_guide/kaggle_beginner_guide.html) 
 - #### 2020-03-11 [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
 
 <br>
 
-# News
+## News
 
 - #### 2020-03-17 [dplyr 버전 업데이트 리뷰](/docs/News/dplyr_1_0_0.html)
 - #### 2020-03-10 [ggplot2 버전 업데이트 리뷰](docs/News/ggplot2_330.html)
 
 <br>
 
-# AWS
+## AWS
 
 - #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
 
 
 
+</div>
