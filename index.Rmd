@@ -61,10 +61,6 @@ ga('send', 'pageview');
 </head>
 
 
-
-<br>
-
-
 <p align="center">
   <img src="Gareth_Frank_Bale_circle_index.png" width="120" height="120"> <br>
   <font size= 3><b>우리 인간은 미완성의 신들이다.</b></font> <br>
@@ -101,4 +97,5 @@ ga('send', 'pageview');
 ## AWS
 
 - #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
+
 
