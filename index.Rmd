@@ -28,7 +28,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <style>
 .navbar {
-  background-color:#000000;
+  background-color:#24292e;
   border-color:white;
 }
 .navbar-brand {
@@ -43,7 +43,6 @@ color:white!important;
 </style>
 
 
- <div style = "padding: 0px 400px 1px 400px;">  
 
 
 <head>
@@ -103,6 +102,3 @@ ga('send', 'pageview');
 
 - #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
 
-
-
-</div>
