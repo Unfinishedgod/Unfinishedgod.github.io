@@ -96,6 +96,6 @@ ga('send', 'pageview');
 
 ## AWS
 
-- #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
-
+- #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) 
+- #### 2020-04-07 [AWS EC2 기능 설정](/docs/aws/setting_ec2/setting_ec2.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
 
