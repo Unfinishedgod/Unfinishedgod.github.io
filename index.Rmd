@@ -84,7 +84,7 @@ ga('send', 'pageview');
 
 - #### 2020-03-22 [Kaggle Beginner Guide](docs/kaggle/Kaggle_beginner_guide/kaggle_beginner_guide.html) 
 - #### 2020-03-11 [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
-- #### 2020-04-10 [Kaggle: House Prices: Advanced Regression Techniques](/dosc/kaggle/house_prices_boston_regression/house_price_boston_regression.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
+- #### 2020-04-10 [Kaggle: House Prices: Advanced Regression Techniques](/docs/kaggle/house_prices_boston_regression/house_price_boston_regression.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
 
 <br>
 
