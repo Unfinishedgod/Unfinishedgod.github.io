@@ -16,6 +16,21 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=10, fig.height = 8)
 ```
 
+<head>
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-145407326-3', 'auto');
+ga('send', 'pageview');
+
+
+</script>
+</head>
+
+
 <p align="center">
   <img src="https://storage.googleapis.com/kaggle-competitions/kaggle/3948/media/bikes.png"><br>
     <b>Bike Sharing Demand 링크: [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand)</b><br>
@@ -45,7 +60,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=
 평가는 RMSLE(Root Mean Square Logarithmic Error)로 하며 이는 RMSE에 각각 log를 씌운것으로 오차에 대해서 과대평가된 항목보다 과소평가된 항목에 패널티를 더 주게 된다. 식은 다음과 같다.
 
 <p align="center">
-$$ \sqrt{\frac{1}{n} \sum(\log(pi + 1) - \log(a_i+1))2 } $$
+$$ \sqrt{\frac{1}{n} \sum(\log(a_i + 1) - \log(a_i+1))2 } $$
 </p>
 
 <br>
