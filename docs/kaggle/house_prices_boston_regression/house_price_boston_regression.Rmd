@@ -1,5 +1,5 @@
 ---
-title: "House Prices: Advanced Regression Techniques"
+title: "House Prices: Advanced Regression Techniques(Doing)"
 author: "최의용"
 date: "`r Sys.Date()`"
 output: 
@@ -27,9 +27,17 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-145407326-3', 'auto');
 ga('send', 'pageview');
 
+<<<<<<< HEAD
 </script>
 </head>
 
+=======
+
+</script>
+</head>
+
+
+>>>>>>> 7264d49b30bee39a6dbe46dfb75d922cf399e303
 <br>
 
 <p align="center">
