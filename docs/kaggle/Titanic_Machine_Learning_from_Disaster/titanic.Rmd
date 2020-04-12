@@ -17,10 +17,24 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center")
 ```
 
+<head>
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-145407326-3', 'auto');
+ga('send', 'pageview');
+
+
+</script>
+</head>
+
 <p align="center">
   <img src="Titanic_main.PNG"><br>
-  <b>Github Code: [Hoon0427/RPubs](https://github.com/Unfinishedgod/Unfinishedgod.github.io/blob/master/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.Rmd){target="_blank"} <br>
-  <b>File Download: [Titanic Data](https://www.kaggle.com/c/titanic/data){target="_blank"} </b><br>
+  <b>Github Code: [Unfinishedgod](https://github.com/Unfinishedgod/Unfinishedgod.github.io/blob/master/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.Rmd){target="_blank"} <br>
+  <b>Titanic 링크: [Titanic Data](https://www.kaggle.com/c/titanic/data){target="_blank"} </b><br>
 </p>
 
 # 영화: 타이타닉
@@ -47,31 +61,12 @@ library(rpart.plot)
 library(caret) 
 library(e1071)   
 library(randomForest) 
-library(htmltools)
+library(patchwork)
 
 
 
 training_set <- read.csv("train.csv")
 test_set <- read.csv("test.csv")
-```
-
-```{r, echo=FALSE}
-thumbnail <- function(title, img, href, caption = TRUE) {
-  div(class = "col-sm-4",
-      a(class = "thumbnail", title = title, href = href,
-        img(src = img),
-        div(class = if (caption) "caption",
-            if (caption) title)
-      )
-  )
-}
-
-thumbnail("Apple", "images/apple.png",
-          "https://en.wikipedia.org/wiki/Apple")
-thumbnail("Grape", "images/grape.png",
-          "https://en.wikipedia.org/wiki/Grape")
-thumbnail("Peach", "images/peach.png",
-          "https://en.wikipedia.org/wiki/Peach")
 ```
 
 <br>
@@ -155,14 +150,22 @@ training_set <- training_set %>%
   drop_na()
 ```
 
-
-## 나이 데이터 전처리
-
 <br>
 
-나이 데이터를 factor형식으로 10살 단위로 끊어 정제해보겠습니다. 60살이 넘으면 over60이라는 팩터를 구분을 지어놨습니다. 그리고 시각화를 하면, 어느정도 정규성을 띄는 것을 볼 수 있습니다.
+# 시각화
+
+이번에는 데이터를 시각화해서 파악해보자. 여러 변수가 있지만 영화를 통해 파악해보기로 했기도 해서 성별, Pclass, 나이만 간단히 보자.
+
+- 성별
+  -그래프를 보면 남자의 생존 비율이 여자보다 확실히 떨어지는것을 알 수 있다.
   
-```{r}
+- 객실
+  - 객실에 따라서도 사망자수는 꽤 차이를 볼 수 있다.
+  
+- 나이
+  - 나이는 숫자형으로 되어 있어서 mutate(), case_when()함수를 사용해서 범주형 변수를 하나 만들었다. 10살 기준으로 끊어서 만들었으며, 특별한 이유는 없다. 그래프를 보면 10살 이하, 60살 이상은 적은 사망자수가 있는 반면, 20~50대에는 많은 사망자수가 있음을 볼 수 있다. 위에 게시한 타이타닉 영화 한장면만 봐도 어느정도는 알 수 있는 부분이다.
+
+```{r, fig.width=8, fig.height=8}
 training_set <- training_set %>% 
   mutate(Ages = case_when(
     Age < 10 ~ "Under 10",
@@ -173,137 +176,60 @@ training_set <- training_set %>%
     Age < 60 ~ "50 ~ 60",
     TRUE ~ "over 60"
   )) 
+
 training_set$Ages <- 
   factor(training_set$Ages,
          levels = c("Under 10", "10 ~ 20", "20 ~ 30", "30 ~ 40", "40 ~ 50", "50 ~ 60", "over 60"))
-data_cleanging <- training_set %>% 
-  group_by(Ages) %>% 
-  summarise(Ages_count = n())
-ggplot(data_cleanging, aes(x = Ages, y = Ages_count, fill=Ages)) +
-  geom_col() +
-  geom_text(aes(label=(Ages_count)), vjust=3, hjust = 0.5,color="black", size=4) +
-  theme(axis.text.x = element_text(size=10)) +
-  theme(axis.text.y = element_text(size=10))
-```
 
-<br>
-
-# 데이터 시각화
-
-
-  타이타닉의 데이터를 시각화를 통해 파악해보겠습니다. 앞서 도메인 지식을 통해 어느정도는 남자와 여자가, 또는 객실의 등급에 따라서, 나이에 따라 생존 유무가 달라지는 것을 확인할 수 있었지만, 시각화를 통해 조금 더 직관적으로 알아보겠습니다.
-  
-<br>
-
-## 성별에 따른 생존여부
-
-
-  성별에 따른 생존여부를 시각화해보겠습니다. 왼쪽 막대 그래프가 사망자의 남녀 분포이고, 오른쪽의 막대 그래프가 생존자의 막대 그래프입니다. 그래프만 봐도 알 수 있듯이, 사망자 중에서는 남자가 많은 비율을 차지하는것을 볼 수 있습니다.
-  
-```{r}
-ggplot_data<- ggplot(training_set, aes(x=Survived, fill = Sex)) +
+plot_1 <- ggplot(training_set, aes(x=Survived, fill = Sex)) +
   geom_bar() +
   ggtitle("성별에 따른 생존 여부") +
-  theme_bw()
-ggplotly(ggplot_data, height = 500, width=800)
-```
+  theme(legend.position="bottom")
 
-<br>
-
-## Pclass에 따른 생존여부
-
-
-  Pclass에 따른 생존여부에서 사망자의 수는 Pclass등급에 따라 어느정도 차이를 보이고 있으며, 왼쪽 생존자 막대 그래프에서는 등급에 따른 큰 차이를 보이지 않고 있습니다.
-  
-```{r}
-ggplot_data <- ggplot(training_set, aes(x = Survived, fill = Pclass)) +
+plot_2 <- ggplot(training_set, aes(x = Survived, fill = Pclass)) +
   geom_bar() +
   ggtitle(" Pclass에 따른 생존 여부 ") +
-  theme_bw()
-ggplotly(ggplot_data, height = 500, width = 800)
-```
+  theme(legend.position="bottom") 
 
-<br>
-
-## 나이에 따른 생존여부
-
-
-  나이에 따른 생존여부를 확인하기위해 시각화를 한 자료에 근거하면, Under10과 over60에서 비교적 적은 사망자수를 확인할 수 있는 반면, 20~50대 사망자가 많은것으로 보아, 어린아이들과 노인들에 대한 선조치가 이루어졌을 것을 짐작할 수 있습니다.
-
-```{r}
-ggplot_data <- training_set %>% 
+plot_3 <- training_set %>% 
   ggplot(aes(x = Survived, fill = Ages)) +
   geom_bar() +
   ggtitle(" 나이에 따른 생존 여부 ") +
-  theme_bw() 
-ggplotly(ggplot_data, height = 500, width = 800)
+  theme(legend.position="bottom") 
+
+(plot_1 + plot_2) / plot_3
 ```
 
 <br>
 
-## SibSp에 따른 생존여부
 
+# 모델: Random Forest
 
-  혼자 탑승한 승객의 사망자수가 가장 높게 나타났으나, 단순하게 1인 승객의 사망률이 높게 나타난것일 수 있으므로 유의미한 해석은 아닐 것 같습니다.
-```{r}
-ggplot_data <- training_set %>% 
-  ggplot(aes( x = Survived, fill = factor(SibSp))) +
-  geom_bar() +
-  ggtitle( "같이 탑승한 배우자 또는 형제에 따른 생존여부") +
-  theme_bw()
-ggplotly(ggplot_data, height = 500, width = 800)
-```
-
-<br>
-
-## Parch에 따른 생존여부
-
-
-  함께 탑승한 부모 또는 자녀의 수에 따른 생존여부를 시각해보았습니다. 예상했듯이 큰 의미는 없습니다.
-```{r}
-ggplot_data <- training_set %>% 
-  ggplot(aes( x = Survived, fill = factor(Parch))) +
-  geom_bar() +
-  ggtitle( "함께 탑승한 부모 또는 자녀의 수에 따른 생존여부") +
-  theme_bw()
-ggplotly(ggplot_data, height = 500, width = 800)
-```
-
-<br>
-
-# 모델생성
-
-<br>
 
   데이터에 대한 파악, 자료형 변환을 마쳤고, 시각화까지 모두 학인해보았습니다. 이제 트레이닝 셋으로 모델을 만들어서 테스트 셋을 예측해보겠습니다. 종속변수는 Survived, 독립변수는 Sex와 Pclass, age로 하겠습니다. 그 전에 Survived의 자료형을 factor로 바꿔주겠습니다.
   
-```{r}
-training_set$Survived <- as.factor(training_set$Survived)
-str(training_set)
-```
-
-<br>
-
-## Random Forest
 
    랜덤포레스트는 의사결정나무 모델의 상위버전이라고 할 수 있습니다. 여러개의 의사결정나무모델을 사용하여 정확도를 높이는 앙상블 기법 중 하나입니다.
 
-<br>
-
-## RandomForest 결과해석
 
 - 변수의 중요도를 확인하니, Sex, Pclass, Age 순으로 된 도표를 확인할 수 있습니다.
 
 ```{r}
+training_set$Survived <- as.factor(training_set$Survived)
+
 # RandomForest 모델 생성
 rf_m <- randomForest(Survived ~ Pclass + Age + Sex, data = training_set)
 # importance
 rf_info <- randomForest(Survived ~ Sex + Age + Pclass , data = training_set, importance = T)
-# 데이터의 중요도 확인 
-importance(rf_info)
+
 ```
 
+## 결과해석
+
 ```{r}
+# 데이터의 중요도 확인 
+importance(rf_info)
+
 #데이터의 중요도 시각화
 varImpPlot(rf_info)
 ```
@@ -315,13 +241,11 @@ rf_p <- predict(rf_m, newdata=test_set, type="class")
 
 <br>
 
-# 제출데이터 및 구성결과 확인
+# 제출 및 확인
 
-<br>
+생성한 모델을 제출양식에 맞춰 Data Frame으로 제출해보겠습니다. 
 
-  생성한 모델을 제출양식에 맞춰 Data Frame으로 제출해보겠습니다. 제출 양식은 처음에 다운받은 gender_submision.csv에서 확인할 수 있습니다. 그리고 제출한 결과 스코어는 다음과 같습니다.
 * Random Forest Score: 0.75598
-  두 모델 모두 73%, 75%로 비슷한 정확도를 보였지만, Random Forest의 결과가 조금 더 좋았습니다.
 
 ```{r}
 solution <- data.frame(PassengerID = test_set$PassengerId, Survived = rf_p)
@@ -332,7 +256,5 @@ write.csv(solution, "solution.csv", row.names = FALSE)
 
 # 총평
 
-<br>
-
-  이렇게 캐글에서 타이타닉 생존자 예측을 시도했습니다. Pclass, Age, Sex 세 가지만 가지고 모델을 돌렸으며, 신뢰도는 70%정도가 나왔습니다. 조금 더 높힐 수 있는 방법으로는 test_set의 NA값을잘 처리하거나, Data 선정을 조금 더 잘 해야하는 방법이 있겠습니다.
+캐글에서 타이타닉을 하려는데 문득 영화가 생각이 났었다. 그래서 영화의 내용을 기반으로 분석을 해보면 어떨까? 하는 생각으로 가볍게 분석을 시도해봤다. 상당히 간단하게 진행을 했지만 다른 타이타닉 분석글들을 보면 높은 수준의 글들이 있는걸 볼 수 있는데, 다음에는 이러한 것들을 많이 필사 해가면서 수준을 높혀야 겠다. 
 
