@@ -183,18 +183,18 @@ training_set$Ages <-
 
 plot_1 <- ggplot(training_set, aes(x=Survived, fill = Sex)) +
   geom_bar() +
-  ggtitle("성별에 따른 생존 여부") +
+  ggtitle("Survived by Sex") +
   theme(legend.position="bottom")
 
 plot_2 <- ggplot(training_set, aes(x = Survived, fill = Pclass)) +
   geom_bar() +
-  ggtitle(" Pclass에 따른 생존 여부 ") +
+  ggtitle("Survived by Pclass") +
   theme(legend.position="bottom") 
 
 plot_3 <- training_set %>% 
   ggplot(aes(x = Survived, fill = Ages)) +
   geom_bar() +
-  ggtitle(" 나이에 따른 생존 여부 ") +
+  ggtitle("Survived by Ages") +
   theme(legend.position="bottom") 
 
 (plot_1 + plot_2) / plot_3
@@ -205,15 +205,8 @@ plot_3 <- training_set %>%
 
 # 모델: Random Forest
 
-
-  데이터에 대한 파악, 자료형 변환을 마쳤고, 시각화까지 모두 학인해보았습니다. 이제 트레이닝 셋으로 모델을 만들어서 테스트 셋을 예측해보겠습니다. 종속변수는 Survived, 독립변수는 Sex와 Pclass, age로 하겠습니다. 그 전에 Survived의 자료형을 factor로 바꿔주겠습니다.
+데이터 파악, 전처리, 시각화까지 모두 진행 했으니 이제 생존 예측을 해보자. 모델은 Random Forest를 사용할 것이며 캐글에서 유명한, xgboost, lightbgm만큼은 아니더라도 빠른 속도와, 적당히 높은 성능을 보이고 있다. 종속변수는 Survived, 독립변수는 Sex와 Pclass, age로 사용하려 한다. 
   
-
-   랜덤포레스트는 의사결정나무 모델의 상위버전이라고 할 수 있습니다. 여러개의 의사결정나무모델을 사용하여 정확도를 높이는 앙상블 기법 중 하나입니다.
-
-
-- 변수의 중요도를 확인하니, Sex, Pclass, Age 순으로 된 도표를 확인할 수 있습니다.
-
 ```{r}
 training_set$Survived <- as.factor(training_set$Survived)
 
@@ -225,6 +218,8 @@ rf_info <- randomForest(Survived ~ Sex + Age + Pclass , data = training_set, imp
 ```
 
 ## 결과해석
+
+결과를 보면 성별, 객실, 나이 순으로 데이터의 중요도를 나타낸것을 볼 수 있다. 영화에 의존해서 데이터를 파악하다보니 꽤나 맘에 드는 순서가 나온것 같다.
 
 ```{r}
 # 데이터의 중요도 확인 
@@ -243,9 +238,9 @@ rf_p <- predict(rf_m, newdata=test_set, type="class")
 
 # 제출 및 확인
 
-생성한 모델을 제출양식에 맞춰 Data Frame으로 제출해보겠습니다. 
+랜덤포레스트로 분석해본 결과는 다음과 같다.
 
-* Random Forest Score: 0.75598
+- Random Forest Score: 0.75598
 
 ```{r}
 solution <- data.frame(PassengerID = test_set$PassengerId, Survived = rf_p)
