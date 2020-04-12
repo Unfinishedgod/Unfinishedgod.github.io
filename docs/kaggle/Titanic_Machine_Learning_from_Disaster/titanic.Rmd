@@ -1,5 +1,5 @@
 ---
-title: "Titanic 생존분석"
+title: "영화를 통해 파악해보는 Titanic 분석"
 author: "최의용"
 date: "`r Sys.time()`"
 output: 
@@ -23,136 +23,145 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align =
   <b>File Download: [Titanic Data](https://www.kaggle.com/c/titanic/data){target="_blank"} </b><br>
 </p>
 
-# 타이타닉 
+# 영화: 타이타닉
 
-![](titanic_1.PNG)
-![](titanic_2.PNG)
-![](titanic_3.PNG)
+<p align="center">
+![](titanic_1.PNG){#id .class width="100%"}
+![](titanic_2.PNG){#id .class width="100%"}
+![](titanic_3.PNG){#id .class width="100%"}
+<p align="center">
 
 <br>
-   타이타닉 생존예측을 하기위해 최소한의 도메인 지식을 사용해보자.    <br>   타이타닉이 침몰한 해는 1912년, 그리고 그 당시에는 lady first 라는 개념이 전반적으로 팽배했으며, 그러한 이유로 침몰중에 승무원들은 어린아이와 여자부터 먼저 챙겼다고 한다. 또한, 부자, 일반인, 가난한 사람 등 여러 부류의 사람이 있었으며, 이는 각각 1,2,3 등급의 객실에 탑승했었던 것으로 보인다.   <br>    이러한 도메인 지식은 간단한 인터넷검색과 영화 '타이타닉'에서 볼 수 있으며, 극 중 남주인 레오나르도 디카프리오는 3등급 손님이었으며, 역시 영화에서 사망으로 표현된다.
-<br>
+
+분석을 하기전에 당시의 시대 상황이 어떤지 파악해보자. 영화 타이타닉의 장면들을 가져와봤다. 장면들에서 볼수 있겠지만 우선 객실의 등급이 우선시 되는 시대였다. 1,2,3등급의 객실로 사람을 구분 짓고 보트에 탑승 할때도 되도록이면 1등급의 사람을 우선 태웠다. 심지어 영화내용에는 1등급의 사람들은 보트도 여유있게 탑승 한것처럼 표현을 하고 있더라. 그리고 나서 여자와 아이들을 먼저 태우려 하고, 결국 마지막에 죽는 사람들은 2,3등급 객실의 남자가 대부분 죽는것처럼 나온다. 캐글에서 받은 데이터도 실제로 이러한지 알아보면서 분석을 해보자.
 
 
 # 패키지 불러오기&데이터 가져오기
+
 ```{r message=FALSE}
-library(tidyverse) #Tidyverse 패키지
-library(ggplot2) #시각화 패키지
-library(plotly)  #반응형 시각화 패키지
-library(rpart) # 의사결정 나무
-library(rpart.plot) # 의사결정 나무 시각화 
-library(caret) # 데이터 처리 패키지
-library(e1071)   #혼동행렬 패키지
-library(randomForest)  #Random Forest 패키지
+library(tidyverse) 
+library(ggplot2) 
+library(plotly) 
+library(rpart) 
+library(rpart.plot) 
+library(caret) 
+library(e1071)   
+library(randomForest) 
+library(htmltools)
+
 
 
 training_set <- read.csv("train.csv")
 test_set <- read.csv("test.csv")
 ```
+
+```{r, echo=FALSE}
+thumbnail <- function(title, img, href, caption = TRUE) {
+  div(class = "col-sm-4",
+      a(class = "thumbnail", title = title, href = href,
+        img(src = img),
+        div(class = if (caption) "caption",
+            if (caption) title)
+      )
+  )
+}
+
+thumbnail("Apple", "images/apple.png",
+          "https://en.wikipedia.org/wiki/Apple")
+thumbnail("Grape", "images/grape.png",
+          "https://en.wikipedia.org/wiki/Grape")
+thumbnail("Peach", "images/peach.png",
+          "https://en.wikipedia.org/wiki/Peach")
+```
+
 <br>
-
-
 
 # 탐색적 데이터 분석(EDA)
 
-## 데이터 구조 파악
+## 데이터 파악
 
-  데이터의 구조를 파악해보겠습니다. 데이터의 구조는 다음과 같습니다.
+각각의 데이터를 파악해보자. 영화에 표현되었던 객실(Pclass), 성별(Sex), 나이(Age)
+
 ```{r}
 str(training_set)
 ```
+
 <br>
-  데이터의 구조 파악하기 
-* PassengerID : 승객 고유번호   
-* Survived : 생존여부 0=No/ 1=Yes 
-* Pclass : 1등급, 2등급, 3등급   
-** int형으로 되어있기에 **factor**형으로 변경필요 
-* Name : 승객명  
-** factor형으로 되어있기에 **character**형으로 변경필요 
-* Sex : 성별  
-* SibSp: 함께 탑승한 배우자 또는 형제의 수   
-* Ticket : 티켓번호   
-** factor형으로 되어있기에 **character**형으로 변경필요 
-* Fare : 티켓요금  
-* Cabin : 선실번호   
-** factor형으로 되어있기에 **character**형으로 변경필요 
-* Embarked : 탑승한 곳 각각 "C", "Q", "S"는 탑승한 곳을 뜻하는 것으로 예상
+
+- PassengerID: 승객 고유번호   
+- Survived: 생존여부 0=No/ 1=Yes 
+- Pclass: 1등급, 2등급, 3등급   
+  - int형으로 되어있기에 **factor**형으로 변경필요 
+- Name: 승객명  
+  - factor형으로 되어있기에 **character**형으로 변경필요 
+- Sex: 성별  
+- Age: 나이
+- SibSp: 함께 탑승한 배우자 또는 형제의 수   
+- Ticket: 티켓번호   
+  - factor형으로 되어있기에 **character**형으로 변경필요 
+- Fare: 티켓요금  
+- Cabin: 선실번호   
+  - factor형으로 되어있기에 **character**형으로 변경필요 
+- Embarked: 탑승한 곳 각각 "C", "Q", "S"는 탑승한 곳을 뜻하는 것으로 예상
+
+
 ```{r}
+# Train set cleansing
 training_set$Pclass <- as.factor(training_set$Pclass)
 training_set$Name <- as.character(training_set$Name)
 training_set$Ticket <- as.character(training_set$Ticket)
 training_set$Cabin <- as.character(training_set$Cabin)
-str(training_set)
-```
-<br>
-  원하는대로 자료형이 바뀐 것을 확인할 수 있습니다. 이와 같이 test_set도 자료형을 바꿔주겠습니다.
-```{r}
+
+# Test set cleansing
 test_set$Pclass <- as.factor(test_set$Pclass)
 test_set$Name <- as.character(test_set$Name)
 test_set$Ticket <- as.character(test_set$Ticket)
 test_set$Cabin <- as.character(test_set$Cabin)
-str(test_set)
-```
-<br>
-```{r}
+
 test_set$Age[is.na(test_set$Age)] <- mean(test_set$Age, na.rm = T)
-sapply(test_set, function(x){
-  sum(is.na(x))
-})
 ```
-<br>
-
-## 데이터 요약정보 파악
 
 <br>
 
-  데이터 요약 정보를 파악한 결과 다음과 같습니다.
+## 데이터 Summary
+
+Summary() 함수를 사용해서 데이터의 요약정보를 불러오자. 
+
+- Pclass는 각각 1등급: 216명, 2등급: 184명, 3등급: 491명
+- 성별은 남자: 314명, 여자: 577명
+- 나이는 최솟값이 0.42 세, 최댓값이 80세. 평균: 29.7세, NA(집계되지 않은 나이): 177명
+
 ```{r}
 summary(training_set)
 ```
+
 <br>
-* Pclass 는 1등급이 216명, 2등급이 184 명, 3등급이 491명으로 구성되어 있다.
-* 성별은 남자가 314명, 여자가 577명으로 분포되어 있다.
-* 나이는 최솟값이 0.42 세, 최댓값이 80 세로 되어있다. 그리고 평균은 29.7세, 1분위수는 20.12세, 3분위수는 38세, NA가 177명 인것으로 봐서 당시 나이가 제대로 파악되지 않았음을 알 수 있다.
-* 함께 탑승한 형제 또는 배우자의 수는 최대 8명 그리고 평균적으로 0.5명인 것으로 보인다.
-* 함께 탑승한 부모 또는 자녀의 수는 최대 6명이고 평균이 0.38명으로 보인다.
-<br>
-## 3)결측치 파악
-<br>
-  결측치를 파악해보자.
+
+## 결측치 파악
+
+결측치를 파악해보자. 결측치가 177개이며 컬럼별로 파악해보면 다음과 같다.
+
 ```{r}
-sum(is.na(training_set))
+colSums(is.na(training_set))
 ```
 
-<br>
+Age 결측치를 처리하는데 있어서 여러가지 방법이 있는데, 그 중 대표적인 것들이 NA제거, 평균값으로 대치, 행,열 제거가 있습니다. 이번에는 NA를 제거 하려고 하는데, 이유는 다음과 같다. 
 
-  결측치가 177개나 됩니다. 결측치는 Age에서 177개가 있습니다. 조금 더 구체적으로 컬럼별 결측치를 파악하겠습니다.
+- 결측치의 갯수가 그리 많지 않다. 
+- 나이데이터를 평균을 냈다가 177개의 평균값이 생존에 영향을 끼칠수도 있을까 싶다. 
+
 ```{r}
-sapply(training_set, function(x){
-  sum(is.na(x))
-})
+training_set <- training_set %>% 
+  drop_na()
 ```
 
-<br>
-
-  이로써 정확히 Age에만 결측치가 있는 것을 확인할 수 있다. 나이는 결측치를 처리하는데 있어서 여러가지 방법이 있는데, 그 중 대표적인 것들이 NA제거, 평균값으로 대치, 행,열 제거가 있습니다. 나이에 대해서는 평균값으로 대치할 경우 생존여부에 영향을 끼칠 수 있으므로 행을 제거하는 방법을 사용하겠습니다.
-  
-```{r}
-training_set<-na.omit(training_set)
-sum(is.na(training_set))
-```
-
-<br>
-
-  결측치가 제거되었음을 확인할 수 있습니다.
-
-<br>
 
 ## 나이 데이터 전처리
 
 <br>
 
-  나이 데이터를 factor형식으로 10살 단위로 끊어 정제해보겠습니다. 60살이 넘으면 over60이라는 팩터를 구분을 지어놨습니다. 그리고 시각화를 하면, 어느정도 정규성을 띄는 것을 볼 수 있습니다.
+나이 데이터를 factor형식으로 10살 단위로 끊어 정제해보겠습니다. 60살이 넘으면 over60이라는 팩터를 구분을 지어놨습니다. 그리고 시각화를 하면, 어느정도 정규성을 띄는 것을 볼 수 있습니다.
+  
 ```{r}
 training_set <- training_set %>% 
   mutate(Ages = case_when(
@@ -176,11 +185,11 @@ ggplot(data_cleanging, aes(x = Ages, y = Ages_count, fill=Ages)) +
   theme(axis.text.x = element_text(size=10)) +
   theme(axis.text.y = element_text(size=10))
 ```
+
 <br>
 
 # 데이터 시각화
 
-<br>
 
   타이타닉의 데이터를 시각화를 통해 파악해보겠습니다. 앞서 도메인 지식을 통해 어느정도는 남자와 여자가, 또는 객실의 등급에 따라서, 나이에 따라 생존 유무가 달라지는 것을 확인할 수 있었지만, 시각화를 통해 조금 더 직관적으로 알아보겠습니다.
   
@@ -188,9 +197,9 @@ ggplot(data_cleanging, aes(x = Ages, y = Ages_count, fill=Ages)) +
 
 ## 성별에 따른 생존여부
 
-<br>
 
   성별에 따른 생존여부를 시각화해보겠습니다. 왼쪽 막대 그래프가 사망자의 남녀 분포이고, 오른쪽의 막대 그래프가 생존자의 막대 그래프입니다. 그래프만 봐도 알 수 있듯이, 사망자 중에서는 남자가 많은 비율을 차지하는것을 볼 수 있습니다.
+  
 ```{r}
 ggplot_data<- ggplot(training_set, aes(x=Survived, fill = Sex)) +
   geom_bar() +
@@ -203,7 +212,6 @@ ggplotly(ggplot_data, height = 500, width=800)
 
 ## Pclass에 따른 생존여부
 
-<br>
 
   Pclass에 따른 생존여부에서 사망자의 수는 Pclass등급에 따라 어느정도 차이를 보이고 있으며, 왼쪽 생존자 막대 그래프에서는 등급에 따른 큰 차이를 보이지 않고 있습니다.
   
@@ -219,9 +227,9 @@ ggplotly(ggplot_data, height = 500, width = 800)
 
 ## 나이에 따른 생존여부
 
-<br>
 
   나이에 따른 생존여부를 확인하기위해 시각화를 한 자료에 근거하면, Under10과 over60에서 비교적 적은 사망자수를 확인할 수 있는 반면, 20~50대 사망자가 많은것으로 보아, 어린아이들과 노인들에 대한 선조치가 이루어졌을 것을 짐작할 수 있습니다.
+
 ```{r}
 ggplot_data <- training_set %>% 
   ggplot(aes(x = Survived, fill = Ages)) +
@@ -235,7 +243,6 @@ ggplotly(ggplot_data, height = 500, width = 800)
 
 ## SibSp에 따른 생존여부
 
-<br>
 
   혼자 탑승한 승객의 사망자수가 가장 높게 나타났으나, 단순하게 1인 승객의 사망률이 높게 나타난것일 수 있으므로 유의미한 해석은 아닐 것 같습니다.
 ```{r}
@@ -251,7 +258,6 @@ ggplotly(ggplot_data, height = 500, width = 800)
 
 ## Parch에 따른 생존여부
 
-<br>
 
   함께 탑승한 부모 또는 자녀의 수에 따른 생존여부를 시각해보았습니다. 예상했듯이 큰 의미는 없습니다.
 ```{r}
@@ -270,6 +276,7 @@ ggplotly(ggplot_data, height = 500, width = 800)
 <br>
 
   데이터에 대한 파악, 자료형 변환을 마쳤고, 시각화까지 모두 학인해보았습니다. 이제 트레이닝 셋으로 모델을 만들어서 테스트 셋을 예측해보겠습니다. 종속변수는 Survived, 독립변수는 Sex와 Pclass, age로 하겠습니다. 그 전에 Survived의 자료형을 factor로 바꿔주겠습니다.
+  
 ```{r}
 training_set$Survived <- as.factor(training_set$Survived)
 str(training_set)
@@ -277,37 +284,7 @@ str(training_set)
 
 <br>
 
-## Decision tree
-
-<br>
-
-  Decision tree란, 나무가지치듯 이진분류를 사용하여 데이터를 분류하는 기법입니다.
-
-<br>
-
-### 의사결정 나무 결과 해석
-
-* 남자는 6.5세 기준으로 생존사망 분류가 뚜렷합니다.
-* 여자는 Pclass 3과 1,2로 크게 분류가 되었습니다.
-
-### Pclass 3의 여자는 5.5, 12, 38.5 살을 기준으로 분류되었습니다.
-
-```{r}
-# 의사결정나무 모델 사용
-rpart_m <- rpart(Survived ~ Pclass + Age + Sex, data = training_set)
-# 의사결정나무 시각화
-prp(rpart_m, type=4, extra=2, digits=3)
-```
-```{r}
-# test set 확인
-rpart_p <- predict(rpart_m, newdata=test_set, type = "class")
-```
-
-<br>
-
 ## Random Forest
-
-<br>
 
    랜덤포레스트는 의사결정나무 모델의 상위버전이라고 할 수 있습니다. 여러개의 의사결정나무모델을 사용하여 정확도를 높이는 앙상블 기법 중 하나입니다.
 
@@ -315,7 +292,8 @@ rpart_p <- predict(rpart_m, newdata=test_set, type = "class")
 
 ## RandomForest 결과해석
 
-* 변수의 중요도를 확인하니, Sex, Pclass, Age 순으로 된 도표를 확인할 수 있습니다.
+- 변수의 중요도를 확인하니, Sex, Pclass, Age 순으로 된 도표를 확인할 수 있습니다.
+
 ```{r}
 # RandomForest 모델 생성
 rf_m <- randomForest(Survived ~ Pclass + Age + Sex, data = training_set)
@@ -324,10 +302,12 @@ rf_info <- randomForest(Survived ~ Sex + Age + Pclass , data = training_set, imp
 # 데이터의 중요도 확인 
 importance(rf_info)
 ```
+
 ```{r}
 #데이터의 중요도 시각화
 varImpPlot(rf_info)
 ```
+
 ```{r}
 # test 결과 확인
 rf_p <- predict(rf_m, newdata=test_set, type="class")
@@ -340,16 +320,12 @@ rf_p <- predict(rf_m, newdata=test_set, type="class")
 <br>
 
   생성한 모델을 제출양식에 맞춰 Data Frame으로 제출해보겠습니다. 제출 양식은 처음에 다운받은 gender_submision.csv에서 확인할 수 있습니다. 그리고 제출한 결과 스코어는 다음과 같습니다.
-* Decision Tree Score : 0.73684
-* Random Forest Score : 0.75598
+* Random Forest Score: 0.75598
   두 모델 모두 73%, 75%로 비슷한 정확도를 보였지만, Random Forest의 결과가 조금 더 좋았습니다.
+
 ```{r}
-# 의사결정 나무 제출 데이터 
-Titanic_rpart <- data.frame(PassengerID = test_set$PassengerId, Survived = rpart_p)
-write.csv(Titanic_rpart, file = "Titanic_rpart_submit.csv", row.names = FALSE)
-# 랜덤포레스트 제출 데이터 
-Titanic_rf <- data.frame(PassengerID = test_set$PassengerId, Survived = rf_p)
-write.csv(Titanic_rf, file = "Titanic_rf_submit.csv", row.names = FALSE)
+solution <- data.frame(PassengerID = test_set$PassengerId, Survived = rf_p)
+write.csv(solution, "solution.csv", row.names = FALSE)
 ```
 
 <br>
