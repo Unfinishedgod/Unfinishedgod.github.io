@@ -18,10 +18,20 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align =
 ```
 
 <p align="center">
-  <img src="https://storage.googleapis.com/kaggle-media/welcome/screen1.png"><br>
+  <img src="Titanic_main.PNG"><br>
   <b>Github Code: [Hoon0427/RPubs](https://github.com/Unfinishedgod/Unfinishedgod.github.io/blob/master/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.Rmd){target="_blank"} <br>
   <b>File Download: [Titanic Data](https://www.kaggle.com/c/titanic/data){target="_blank"} </b><br>
 </p>
+
+# 타이타닉 
+
+![](titanic_1.PNG)
+![](titanic_2.PNG)
+![](titanic_3.PNG)
+
+<br>
+   타이타닉 생존예측을 하기위해 최소한의 도메인 지식을 사용해보자.    <br>   타이타닉이 침몰한 해는 1912년, 그리고 그 당시에는 lady first 라는 개념이 전반적으로 팽배했으며, 그러한 이유로 침몰중에 승무원들은 어린아이와 여자부터 먼저 챙겼다고 한다. 또한, 부자, 일반인, 가난한 사람 등 여러 부류의 사람이 있었으며, 이는 각각 1,2,3 등급의 객실에 탑승했었던 것으로 보인다.   <br>    이러한 도메인 지식은 간단한 인터넷검색과 영화 '타이타닉'에서 볼 수 있으며, 극 중 남주인 레오나르도 디카프리오는 3등급 손님이었으며, 역시 영화에서 사망으로 표현된다.
+<br>
 
 
 # 패키지 불러오기&데이터 가져오기
@@ -41,11 +51,7 @@ test_set <- read.csv("test.csv")
 ```
 <br>
 
-# 타이타닉 생존예측을 하기위한 도메인 지식
 
-<br>
-   타이타닉 생존예측을 하기위해 최소한의 도메인 지식을 사용해보자.    <br>   타이타닉이 침몰한 해는 1912년, 그리고 그 당시에는 lady first 라는 개념이 전반적으로 팽배했으며, 그러한 이유로 침몰중에 승무원들은 어린아이와 여자부터 먼저 챙겼다고 한다. 또한, 부자, 일반인, 가난한 사람 등 여러 부류의 사람이 있었으며, 이는 각각 1,2,3 등급의 객실에 탑승했었던 것으로 보인다.   <br>    이러한 도메인 지식은 간단한 인터넷검색과 영화 '타이타닉'에서 볼 수 있으며, 극 중 남주인 레오나르도 디카프리오는 3등급 손님이었으며, 역시 영화에서 사망으로 표현된다.
-<br>
 
 # 탐색적 데이터 분석(EDA)
 
