@@ -1,5 +1,5 @@
 ---
-title: "영화를 통해 파악해보는 Titanic 분석"
+title: "[R]영화를 통해 파악해보는 Titanic 분석"
 author: "최의용"
 date: "`r Sys.time()`"
 output: 

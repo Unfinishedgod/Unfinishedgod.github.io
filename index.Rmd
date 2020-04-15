@@ -15,12 +15,6 @@ output:
       - { icon: "fa-github", href: "https://github.com/Unfinishedgod", align: right }   
 ---
 
-<!-- --- -->
-<!-- title: "" -->
-<!-- author: "" -->
-<!-- date: "" -->
-<!-- output: html_document -->
-<!-- --- -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
