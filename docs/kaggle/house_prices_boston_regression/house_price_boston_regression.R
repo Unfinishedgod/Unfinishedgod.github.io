@@ -1,5 +1,6 @@
 library(readr)
 library(tidyverse)
+library(randomForest)
 
 
 train_set <- read_csv("./docs/kaggle/house_prices_boston_regression/train.csv")

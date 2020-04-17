@@ -11,4 +11,4 @@ submission <- read_csv("gender_submission.csv")
 
 colSums(is.na(train_set))
 
-
+str(train_set)
