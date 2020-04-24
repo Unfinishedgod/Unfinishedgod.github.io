@@ -19,9 +19,11 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-145407326-3', 'auto');
 ga('send', 'pageview');
 
-
 </script>
 </head>
+
+<a style="display:scroll;position:fixed;bottom:10px;right:10px;" href="https://unfinishedgod.github.io/" title=”Home"><img
+src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 
 
 <br>

@@ -22,6 +22,11 @@ ga('send', 'pageview');
 </script>
 </head>
 
+
+<a style="display:scroll;position:fixed;bottom:10px;right:10px;" href="https://unfinishedgod.github.io/" title=”Home"><img
+src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
+
+
 <center>
 ![](install_r_1.PNG){#id .class width='80%'}
 </center>
@@ -164,3 +169,10 @@ passwd {비밀번호}
 # 총평
 
 이렇게 AWS EC2에 Rstudio server설치까지 마쳤다. 지금와서 보면 정말 별거 아닌 수준이지만, 내가 리눅스 자체가 너무 어렵게 느껴저 1년동안 애써 외면했던걸 생각 해보면, 최대한 진입장벽을 낮추어 자세하게 글을 쓰는게 오히려 어렵게 느껴졌다. 이제 다음글은 AWS S3를 소개 하고 R에서 사용법에 대한 글을 써보면 될것 같다.
+
+
+
+
+
+
+
