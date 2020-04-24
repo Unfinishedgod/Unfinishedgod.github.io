@@ -66,6 +66,21 @@ ga('send', 'pageview');
 <br>
 
 
+
+
+
+
+
+<div class = "row">
+  <div class = "col-md-4">
+ 
+
+  </div>
+  <div class = "col-md-6">
+
+
+
+
 ## Tech set
 
 - #### 2020-03-15 [대한민국 코로나 Dashboard](docs/flexdashboard_shiny/flexdashboard_shiny.html)
@@ -95,3 +110,17 @@ ga('send', 'pageview');
 - #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) 
 - #### 2020-04-07 [AWS EC2 기능 설정](/docs/aws/setting_ec2/setting_ec2.html)
 - #### 2020-04-24 [AWS Rstudio server 설치](/docs/aws/install_r/install_r.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
+
+
+
+
+
+
+
+
+  </div>
+  
+  <div class = "col-md-2">
+ 
+  </div>
+</div>
