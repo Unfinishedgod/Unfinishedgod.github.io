@@ -34,9 +34,6 @@ ga('send', 'pageview');
 src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 
 
-</script>
-</head>
-
 <p align="center">
   <img src="Titanic_main.PNG"><br>
   <b>Github Code: [Unfinishedgod](https://github.com/Unfinishedgod/Unfinishedgod.github.io/blob/master/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.Rmd){target="_blank"} <br>
