@@ -114,3 +114,5 @@ write.csv(Submission, "Submission_AutoML.csv", row.names = F)
 - BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
 - Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
 - Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial)
+- http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html
+- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
