@@ -7,10 +7,10 @@ library(h2o)
 library(caret)
 library(aws.s3)
 
-localH2O = h2o.init(nthreads=-1)
+# localH2O = h2o.init(nthreads=-1)
 
 h2o.init()
-getwd()
+# getwd()
 
 train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
 test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
