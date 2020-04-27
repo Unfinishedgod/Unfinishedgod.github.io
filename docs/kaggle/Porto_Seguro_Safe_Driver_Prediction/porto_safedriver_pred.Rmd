@@ -73,50 +73,56 @@ src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 # 사전 준비
 
 ```{r}
-# library(readr)
-# library(tidyverse)
-# library(ggplot2)
-# library(dplyr)
-# library(pROC)
-# library(h2o)
-# library(caret)
-# library(aws.s3)
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(pROC)
+library(h2o)
+library(caret)
+library(aws.s3)
 ```
 
 ```{r echo = FALSE}
 # S3 버킷 접근을 위한 키값 설정
-Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
-           "AWS_SECRET_ACCESS_KEY" = "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",
+Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJVUGFHXW2",
+           "AWS_SECRET_ACCESS_KEY" = "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",
            "AWS_DEFAULT_REGION" = "ap-northeast-2")
 ```
 
 
 ```{r}
-# h2o.init()
-# # getwd()
-# 
-# train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
-# test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
-# 
-# #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
-# # Set missing values to NA 
-# train_set[train_set == -1] <- NA
-# test_set[test_set == -1] <- NA
-# # collect the categorical variable names
-# cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
-# 
-# # convert categorical features to factors
-# train_set <- train_set %>%
-#   mutate_at(.vars = cat_vars, .funs = as.factor)
-# 
-# test_set <- test_set %>%
-#   mutate_at(.vars = cat_vars, .funs = as.factor)
-# 
-# #One hot encode the factor variables
-# #train_set <- model.matrix(~ . - 1, data = train_set)
+h2o.init()
+
+train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
+test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
+
+#Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
+# Set missing values to NA
+train_set[train_set == -1] <- NA
+test_set[test_set == -1] <- NA
+# collect the categorical variable names
+cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
+
+# convert categorical features to factors
+train_set <- train_set %>%
+  mutate_at(.vars = cat_vars, .funs = as.factor)
+
+test_set <- test_set %>%
+  mutate_at(.vars = cat_vars, .funs = as.factor)
+
+#One hot encode the factor variables
+#train_set <- model.matrix(~ . - 1, data = train_set)
 ```
 
 # 시각화 
+
+```{r}
+ggplot(data = train_set, aes(x = as.factor(target))) + 
+    geom_bar(fill = '#84a5a3') + 
+    labs(title = 'Distribution of Target Class (1 = claim filed)')
+```
+
 
 # 모델링
 
@@ -157,6 +163,10 @@ Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
 # )
 # 
 # automl_leader <- automl_h2o_models@leader
+# 
+# 
+# automl_h2o_models@leaderboard %>% 
+#     as.data.frame()
 ```
 
 

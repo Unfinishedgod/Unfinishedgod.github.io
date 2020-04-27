@@ -69,9 +69,6 @@ ga('send', 'pageview');
 
 
 
-
-
-
 <div class = "row">
   <div class = "col-md-4">
  
