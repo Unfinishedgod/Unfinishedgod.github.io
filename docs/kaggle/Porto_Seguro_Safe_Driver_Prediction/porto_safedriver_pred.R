@@ -7,31 +7,21 @@ library(h2o)
 library(caret)
 library(aws.s3)
 
-# localH2O = h2o.init(nthreads=-1)
+# S3 버킷 접근을 위한 키값 설정
+Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
+           "AWS_SECRET_ACCESS_KEY" = "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",
+           "AWS_DEFAULT_REGION" = "ap-northeast-2")
 
-# install h20
-
-if ("package:h2o" %in% search()) { detach("package:h2o", unload=TRUE) }
-if ("h2o" %in% rownames(installed.packages())) { remove.packages("h2o") }
-
-pkgs <- c("RCurl","jsonlite")
-for (pkg in pkgs) {
-  if (! (pkg %in% rownames(installed.packages()))) { install.packages(pkg) }
-}
-
-install.packages("h2o", type="source", repos=(c("http://h2o-release.s3.amazonaws.com/h2o/latest_stable_R")))
-
-library(h2o)
-localH2O = h2o.init()
-demo(h2o.kmeans)
-
-####
 
 h2o.init()
 # getwd()
 
 train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
 test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
+
+# train_set <- read_csv("../input/porto-seguro-safe-driver-prediction/train.csv")
+# test_set <- read_csv("../input/porto-seguro-safe-driver-prediction/test.csv")
+
 
 #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
 # Set missing values to NA 
@@ -50,7 +40,6 @@ test_set <- test_set %>%
 #One hot encode the factor variables
 #train_set <- model.matrix(~ . - 1, data = train_set)
 
-h2o.init()
 
 #Splitting Datasets into train and validation. I am taking 75% data. 
 #I will use cross validation in next version.
@@ -69,8 +58,8 @@ train_val.hex  <- as.h2o(train_val)
 test.hex <- as.h2o(test_set)
 
 
-rm(train, tiny_train, train_val)
-gc()
+# rm(train, tiny_train, train_val)
+# gc()
 
 # Preparing Target and predictors.
 target <- "target"
@@ -91,7 +80,7 @@ automl_leader <- automl_h2o_models@leader
 pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
 
 pred_conversion <- as.data.frame(pred_conversion)
-Submission <- cbind(test$id, pred_conversion)
+Submission <- cbind(test_set$id, pred_conversion)
 colnames(Submission) <- c("id", "target")
 write.csv(Submission, "Submission_AutoML.csv", row.names = F)
 

@@ -1,6 +1,6 @@
 ---
-title: "Automl_h2o practice with Safe Driver Prediction"
-author: "Owen"
+title: "Porto Seguro’s Safe Driver Prediction을 통해 Automl h2o 다뤄보기"
+author: "최의용"
 date: "`r Sys.time()`"
 output: 
   html_document:
@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align =
 ```
 
 ```{r}
+Sys.time()
 library(readr)
 library(tidyverse)
 library(ggplot2)
@@ -28,6 +29,50 @@ library(caret)
 library(aws.s3)
 ```
 
+```{r echo = FALSE}
+# S3 버킷 접근을 위한 키값 설정
+Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
+           "AWS_SECRET_ACCESS_KEY" = "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",
+           "AWS_DEFAULT_REGION" = "ap-northeast-2")
+```
+
+<head>
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-145407326-3', 'auto');
+ga('send', 'pageview');
+
+</script>
+</head>
+
+<a style="display:scroll;position:fixed;bottom:10px;right:10px;" href="https://unfinishedgod.github.io/" title=”Home"><img
+src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
+
+
+
+
+<center>
+![](Porto_Seguro_Safe_Driver_Prediction.PNG){#id .class width="100%"}
+</center>
+
+
+
+
+# 참고
+
+이번에는
+
+- xwMOOC님 블로그: [순수 H2O AutoML](https://statkclee.github.io/model/model-h2o-automl.html)
+- BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
+- 사자처럼 우아하게님 블로그: [Porto Seguro's Safe Driver Prediction 대회 소개 / 지니계수 란?](https://yseon99.tistory.com/55)
+- Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
+- Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial)
+- http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html
+- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
 
 ```{r}
 h2o.init()
@@ -35,12 +80,6 @@ h2o.init()
 
 train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
 test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
-
-# train_set <- read_csv("../input/porto-seguro-safe-driver-prediction/train.csv")
-# test_set <- read_csv("../input/porto-seguro-safe-driver-prediction/test.csv")
-
-train_set <- train_set[,c(10:20)]
-test_set <- test_set[,c(10:20)]
 
 #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
 # Set missing values to NA 
@@ -58,13 +97,13 @@ test_set <- test_set %>%
 
 #One hot encode the factor variables
 #train_set <- model.matrix(~ . - 1, data = train_set)
+```
 
-h2o.init()
 
+```{r}
 #Splitting Datasets into train and validation. I am taking 75% data. 
 #I will use cross validation in next version.
 set.seed(32)
-
 
 # index <- createDataPartition(train_set[,"target"], p = 0.75, list = FALSE)
 
@@ -84,7 +123,10 @@ test.hex <- as.h2o(test_set)
 # Preparing Target and predictors.
 target <- "target"
 predictors <- setdiff(names(tiny_train.hex), target)
+```
 
+
+```{r results=hide}
 # Let's run automl now.
 automl_h2o_models <- h2o.automl(
   x = predictors, 
@@ -95,24 +137,21 @@ automl_h2o_models <- h2o.automl(
 )
 
 automl_leader <- automl_h2o_models@leader
+```
 
+
+```{r}
 # Predict on test set
 pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
 
 pred_conversion <- as.data.frame(pred_conversion)
-Submission <- cbind(test$id, pred_conversion)
+Submission <- cbind(test_set$id, pred_conversion)
 colnames(Submission) <- c("id", "target")
 write.csv(Submission, "Submission_AutoML.csv", row.names = F)
 
 # Any results you write to the current directory are saved as output.
+
+Sys.time()
 ```
 
 
-# Reference
-
-- xwMOOC님 블로그: [순수 H2O AutoML](https://statkclee.github.io/model/model-h2o-automl.html)
-- BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
-- Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
-- Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial)
-- http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html
-- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
