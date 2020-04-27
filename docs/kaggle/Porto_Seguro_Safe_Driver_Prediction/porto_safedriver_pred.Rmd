@@ -1,5 +1,5 @@
 ---
-title: "Porto Seguro’s Safe Driver Prediction을 통해 Automl h2o 다뤄보기"
+title: "[R] Porto Seguro’s Safe Driver Prediction"
 author: "최의용"
 date: "`r Sys.time()`"
 output: 
@@ -15,25 +15,6 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center")
-```
-
-```{r}
-Sys.time()
-library(readr)
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(pROC)
-library(h2o)
-library(caret)
-library(aws.s3)
-```
-
-```{r echo = FALSE}
-# S3 버킷 접근을 위한 키값 설정
-Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
-           "AWS_SECRET_ACCESS_KEY" = "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",
-           "AWS_DEFAULT_REGION" = "ap-northeast-2")
 ```
 
 <head>
@@ -52,106 +33,143 @@ ga('send', 'pageview');
 <a style="display:scroll;position:fixed;bottom:10px;right:10px;" href="https://unfinishedgod.github.io/" title=”Home"><img
 src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 
+<p align="center">
+  ![](Porto_Seguro_Safe_Driver_Prediction.PNG){#id .class width="100%"}<br>
+    <b>Porto Seguro’s Safe Driver Prediction 링크: [Porto Seguro’s Safe Driver Prediction](https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/overview)</b><br>
+</p>
+
+<br>
 
 
+# About Automl h2o
 
-<center>
-![](Porto_Seguro_Safe_Driver_Prediction.PNG){#id .class width="100%"}
-</center>
+**AutoML h2o**를 사용해 캐글의 Porto Seguro’s Safe Driver Prediction를 분석 해보자. 캐글을 병행하면서 R에서 Automl h2o를 사용할 수 있는 방법을 알게 되었고, 이를 어떻게 사용할 수 있을까 찾다가 선정한 주제였다. 당장은 Automl h2o사용에 있어서 부족한게 많아 상당히 많은 사이트를 참고 하고, 캐글 노트북을 참고하고 필사하게 되었다. 높은 난이도로 R with Automl h2o라는 주제의 블로그는 다음에 시간이 남을때 써보기로 하고 이번에는 Reference를 먼저 소개 하도록 하겠다.
+
+<br>
+
+# Reference
+
+다음은 H2o automl을 공부하는데 있어서 참고 할만한 링크와 Kaggle에서 Porto Seguro's Safe Driver Prediction를 h2o automl을 사용해서 분석한 노트북의 출처이다.
+
+- **H2O AutoML**
+  - xwMOOC님 블로그: [순수 H2O AutoML](https://statkclee.github.io/model/model-h2o-automl.html)
+  - BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
+  - H2O 튜토리얼: [h2o tutorials](http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html)
+- **H2O AutoMA & Kaggle**
+  - Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
+  - Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial) 
+- **Kaggle**
+  - Heads or Tails: [Steering Wheel of Fortune - Porto Seguro EDA](https://www.kaggle.com/headsortails/steering-wheel-of-fortune-porto-seguro-eda)
+  - Troy Walters: [A Very Extensive Porto Exploratory Analysis](https://www.kaggle.com/captcalculator/a-very-extensive-porto-exploratory-analysis)
+  - 사자처럼 우아하게님 블로그: [Porto Seguro's Safe Driver Prediction 대회 소개 / 지니계수 란?](https://yseon99.tistory.com/55)
+
+<br>
+
+# Porto Seguro’s Safe Driver Prediction
+
+이제 본격적으로 Porto Seguro’s Safe Driver Prediction에 대해 알아보도록 하자.
 
 
-
-
-# 참고
-
-이번에는
-
-- xwMOOC님 블로그: [순수 H2O AutoML](https://statkclee.github.io/model/model-h2o-automl.html)
-- BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
-- 사자처럼 우아하게님 블로그: [Porto Seguro's Safe Driver Prediction 대회 소개 / 지니계수 란?](https://yseon99.tistory.com/55)
-- Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
-- Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial)
-- http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html
-- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
-
-```{r}
-h2o.init()
-# getwd()
-
-train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
-test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
-
-#Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
-# Set missing values to NA 
-train_set[train_set == -1] <- NA
-test_set[test_set == -1] <- NA
-# collect the categorical variable names
-cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
-
-# convert categorical features to factors
-train_set <- train_set %>%
-  mutate_at(.vars = cat_vars, .funs = as.factor)
-
-test_set <- test_set %>%
-  mutate_at(.vars = cat_vars, .funs = as.factor)
-
-#One hot encode the factor variables
-#train_set <- model.matrix(~ . - 1, data = train_set)
-```
-
+# 사전 준비
 
 ```{r}
-#Splitting Datasets into train and validation. I am taking 75% data. 
-#I will use cross validation in next version.
-set.seed(32)
-
-# index <- createDataPartition(train_set[,"target"], p = 0.75, list = FALSE)
-
-index <- sample(1:nrow(train_set), nrow(train_set) * 0.7)
-
-tiny_train <- train_set[index, ]
-train_val <- train_set[-index, ]
-
-tiny_train.hex  <- as.h2o(tiny_train)
-train_val.hex  <- as.h2o(train_val)
-test.hex <- as.h2o(test_set)
-
-
-# rm(train, tiny_train, train_val)
-# gc()
-
-# Preparing Target and predictors.
-target <- "target"
-predictors <- setdiff(names(tiny_train.hex), target)
+# library(readr)
+# library(tidyverse)
+# library(ggplot2)
+# library(dplyr)
+# library(pROC)
+# library(h2o)
+# library(caret)
+# library(aws.s3)
 ```
 
-
-```{r results=hide}
-# Let's run automl now.
-automl_h2o_models <- h2o.automl(
-  x = predictors, 
-  y = target,
-  training_frame    = tiny_train.hex,
-  leaderboard_frame = train_val.hex,
-  max_runtime_secs = 3000
-)
-
-automl_leader <- automl_h2o_models@leader
+```{r echo = FALSE}
+# S3 버킷 접근을 위한 키값 설정
+Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
+           "AWS_SECRET_ACCESS_KEY" = "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",
+           "AWS_DEFAULT_REGION" = "ap-northeast-2")
 ```
 
 
 ```{r}
-# Predict on test set
-pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
+# h2o.init()
+# # getwd()
+# 
+# train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
+# test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
+# 
+# #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
+# # Set missing values to NA 
+# train_set[train_set == -1] <- NA
+# test_set[test_set == -1] <- NA
+# # collect the categorical variable names
+# cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
+# 
+# # convert categorical features to factors
+# train_set <- train_set %>%
+#   mutate_at(.vars = cat_vars, .funs = as.factor)
+# 
+# test_set <- test_set %>%
+#   mutate_at(.vars = cat_vars, .funs = as.factor)
+# 
+# #One hot encode the factor variables
+# #train_set <- model.matrix(~ . - 1, data = train_set)
+```
 
-pred_conversion <- as.data.frame(pred_conversion)
-Submission <- cbind(test_set$id, pred_conversion)
-colnames(Submission) <- c("id", "target")
-write.csv(Submission, "Submission_AutoML.csv", row.names = F)
+# 시각화 
 
-# Any results you write to the current directory are saved as output.
+# 모델링
 
-Sys.time()
+```{r}
+# #Splitting Datasets into train and validation. I am taking 75% data. 
+# #I will use cross validation in next version.
+# set.seed(32)
+# 
+# # index <- createDataPartition(train_set[,"target"], p = 0.75, list = FALSE)
+# 
+# index <- sample(1:nrow(train_set), nrow(train_set) * 0.7)
+# 
+# tiny_train <- train_set[index, ]
+# train_val <- train_set[-index, ]
+# 
+# tiny_train.hex  <- as.h2o(tiny_train)
+# train_val.hex  <- as.h2o(train_val)
+# test.hex <- as.h2o(test_set)
+# 
+# 
+# # rm(train, tiny_train, train_val)
+# # gc()
+# 
+# # Preparing Target and predictors.
+# target <- "target"
+# predictors <- setdiff(names(tiny_train.hex), target)
 ```
 
 
+```{r results="hide"}
+# # Let's run automl now.
+# automl_h2o_models <- h2o.automl(
+#   x = predictors, 
+#   y = target,
+#   training_frame    = tiny_train.hex,
+#   leaderboard_frame = train_val.hex,
+#   max_runtime_secs = 3000
+# )
+# 
+# automl_leader <- automl_h2o_models@leader
+```
+
+
+```{r}
+# # Predict on test set
+# pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
+# 
+# pred_conversion <- as.data.frame(pred_conversion)
+# Submission <- cbind(test_set$id, pred_conversion)
+# colnames(Submission) <- c("id", "target")
+# write.csv(Submission, "Submission_AutoML.csv", row.names = F)
+# 
+# # Any results you write to the current directory are saved as output.
+```
+
+# Score

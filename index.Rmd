@@ -13,6 +13,7 @@ output:
     navbar:
       - { icon: "fa-facebook-f", href: "https://www.facebook.com/shjj08", align: right }
       - { icon: "fa-github", href: "https://github.com/Unfinishedgod", align: right }   
+      # - { icon: "fa-kaggle", href: "https://www.kaggle.com/unfinishedgod", align: right }
 ---
 
 
