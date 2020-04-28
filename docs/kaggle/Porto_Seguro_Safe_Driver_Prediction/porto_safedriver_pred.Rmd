@@ -83,13 +83,6 @@ library(caret)
 library(aws.s3)
 ```
 
-```{r echo = FALSE}
-# S3 버킷 접근을 위한 키값 설정
-Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJVUGFHXW2",
-           "AWS_SECRET_ACCESS_KEY" = "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",
-           "AWS_DEFAULT_REGION" = "ap-northeast-2")
-```
-
 
 ```{r}
 h2o.init()
