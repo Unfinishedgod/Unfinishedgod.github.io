@@ -67,53 +67,95 @@ src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 
 # Porto Seguro’s Safe Driver Prediction
 
-이제 본격적으로 Porto Seguro’s Safe Driver Prediction에 대해 알아보도록 하자.
+이제 본격적으로 Porto Seguro’s Safe Driver Prediction에 대해 알아보도록 하자. 데이터를 통해 운전자가 내년에 보험청구를 하는지 여부를 예측하는것이 목표다. 
+
+## 평가 
+
+이번 대회는 Normalized Gini Coefficient로 평가를 하게 된다. 먼저 Gini Coefficient를 이해 해보자면 다음과 같다.
+
+지니 계수( - 係數, 영어: Gini coefficient, 이탈리아어: coefficiente di Gini)는 경제적 불평등(소득 불균형)을 계수화 한 것이다. 오늘날 가장 널리 사용되는, 불평등의 정도를 나타내는 통계학적 지수로, 이탈리아의 통계학자인 코라도 지니(Corrado Gini)가 1912년 발표한 논문 "Variabilità e mutabilità"에 처음 소개되었다. 서로 다른 로렌츠 곡선들이 교차하는 경우 비교하기가 곤란하다는 로렌츠 곡선의 단점을 보완할 수 있다. 지니 계수는 소득 분배의 불평등함 외에도, 부의 편중이나 에너지 소비에 있어서의 불평등함에도 응용된다.
+
+<p align="center">
+  ![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Economics_Gini_coefficient.svg/280px-Economics_Gini_coefficient.svg.png
+){#id .class width="45%"}<br>
+출쳐: [위키백과 지니계수](https://ko.wikipedia.org/wiki/%EC%A7%80%EB%8B%88_%EA%B3%84%EC%88%98)
+</p>
 
 
 # 사전 준비
 
 ```{r}
-library(readr)
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(pROC)
-library(h2o)
-library(caret)
-library(aws.s3)
+# library(readr)
+# library(tidyverse)
+# library(ggplot2)
+# library(dplyr)
+# library(pROC)
+# library(h2o)
+# library(caret)
+# library(aws.s3)
 ```
 
 
 ```{r}
-h2o.init()
-
-train_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/train.csv", bucket = "owentest")
-test_set <- s3read_using(FUN = read_csv, object = "Porto_Seguro_Safe_Driver_Prediction/test_set", bucket = "owentest")
-
-#Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
-# Set missing values to NA
-train_set[train_set == -1] <- NA
-test_set[test_set == -1] <- NA
-# collect the categorical variable names
-cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
-
-# convert categorical features to factors
-train_set <- train_set %>%
-  mutate_at(.vars = cat_vars, .funs = as.factor)
-
-test_set <- test_set %>%
-  mutate_at(.vars = cat_vars, .funs = as.factor)
-
-#One hot encode the factor variables
-#train_set <- model.matrix(~ . - 1, data = train_set)
+# h2o.init()
+# 
+# train_set <- read_csv("/home/owen/file/train.csv")
+# test_set <- read_csv("/home/owen/file/test.csv")
+# 
+# 
+# 
+# #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
+# # Set missing values to NA
+# train_set[train_set == -1] <- NA
+# test_set[test_set == -1] <- NA
+# # collect the categorical variable names
+# cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
+# 
+# # convert categorical features to factors
+# train_set <- train_set %>%
+#   mutate_at(.vars = cat_vars, .funs = as.factor)
+# 
+# test_set <- test_set %>%
+#   mutate_at(.vars = cat_vars, .funs = as.factor)
+# 
+# #One hot encode the factor variables
+# #train_set <- model.matrix(~ . - 1, data = train_set)
 ```
 
 # 시각화 
 
+## Target Feature Analysis
+
 ```{r}
-ggplot(data = train_set, aes(x = as.factor(target))) + 
-    geom_bar(fill = '#84a5a3') + 
-    labs(title = 'Distribution of Target Class (1 = claim filed)')
+# ggplot(data = train_set, aes(x = as.factor(target))) + 
+#     geom_bar(fill = '#84a5a3') + 
+#     labs(title = 'Distribution of Target Class (1 = claim filed)')
+```
+
+## 결측치 파악
+
+```{r}
+data.frame(feature = names(dtrain), 
+           per_miss = map_dbl(dtrain, function(x) { sum(x == - 1) / length(x) })) %>%
+    ggplot(aes(x = reorder(feature, -per_miss), y = per_miss)) + 
+    geom_bar(stat = 'identity', color = 'white', fill = '#5a64cd') +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+    labs(x = '', y = '% missing', title = 'Missing Values by Feature') + 
+    scale_y_continuous(labels = scales::percent)
+```
+
+## 상관 계수 파악 
+
+```{r}
+# Get features names that are not binary or categorical
+cont_vars <- names(dtrain)[!grepl("_cat|_bin", names(dtrain))]
+
+corrplot(cor(dtrain[, cont_vars][3:length(cont_vars)]), 
+         type = 'lower', 
+         col = colorRampPalette(c('#feeb8c', '#5a64cd'))(50),
+         tl.col = 'grey40',
+         mar = c(0,0,1,0),
+         title = 'Correlation Matrix of Continuous Features')
 ```
 
 
