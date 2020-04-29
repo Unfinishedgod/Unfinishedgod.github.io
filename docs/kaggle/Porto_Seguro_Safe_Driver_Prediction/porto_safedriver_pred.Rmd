@@ -14,7 +14,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, 
+                      fig.align = "center", fig.width = 12, fig.height = 12)
 ```
 
 <head>
@@ -81,140 +82,210 @@ src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 출쳐: [위키백과 지니계수](https://ko.wikipedia.org/wiki/%EC%A7%80%EB%8B%88_%EA%B3%84%EC%88%98)
 </p>
 
+## 데이터 파악
+
+- 각각의 컬럼은 다음과 같이 태그 되어 있다. 
+  - ind, reg, car, calc
+- 컬럼 이름으로 데이터의 형식을 알 수 있는데 이는 다음과 같다. 
+  - '_bin': Binary Features
+  - '_cat': Categorical Features
+  - 그외: Continuous 또는 Ordinal Features
+- -1은 Null(결측치)를 의미한다.
+
+<br>
 
 # 사전 준비
 
-```{r}
-# library(readr)
-# library(tidyverse)
-# library(ggplot2)
-# library(dplyr)
-# library(pROC)
-# library(h2o)
-# library(caret)
-# library(aws.s3)
-```
-
+## 패키지 불러오기 & 데이터 로드
 
 ```{r}
-# h2o.init()
-# 
-# train_set <- read_csv("/home/owen/file/train.csv")
-# test_set <- read_csv("/home/owen/file/test.csv")
-# 
-# 
-# 
-# #Setting Missing values to NA. Converting _cat variables to categorical and creating dummy variable for those.
-# # Set missing values to NA
-# train_set[train_set == -1] <- NA
-# test_set[test_set == -1] <- NA
-# # collect the categorical variable names
-# cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
-# 
-# # convert categorical features to factors
-# train_set <- train_set %>%
-#   mutate_at(.vars = cat_vars, .funs = as.factor)
-# 
-# test_set <- test_set %>%
-#   mutate_at(.vars = cat_vars, .funs = as.factor)
-# 
-# #One hot encode the factor variables
-# #train_set <- model.matrix(~ . - 1, data = train_set)
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(pROC)
+library(h2o)
+library(caret)
+library(corrplot)
+library(ggthemes)
+
+
+train_set <- read_csv("/home/owen/file/train.csv")
+test_set <- read_csv("/home/owen/file/test.csv")
 ```
+
+<br>
+
+## H2O init
+
+h2o.init() 함수를 통해 h2o와 R을 연결 시켜준다. 연결을 시켜주면 다음과 같은 정보를 얻을 수 있다. 자세한 내용은 다음을 참고 하자.
+- 참고: [R과 h2o 연결하기](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
+
+```{r}
+h2o.init()
+```
+
+<br>
+
+## 데이터 해석 {.tabset}
+
+### 데이터 구조
+
+```{r}
+str(train_set)
+```
+
+### 데이터 요약정보
+
+```{r}
+summary(train_set)
+```
+
+<br>
+
+# 데이터 전처리
+
+간단하게 전처리를 해보도록 하자. 앞서 말했듯이 -1로 되어 있는 데이터는 결측치 이므로 이는 `NA`로 변경 시켜 주자. 그리고 '_cat'인 컬럼은 모두 factor형식으로 바꿔 주도록 해준다.
+
+```{r}
+train_set[train_set == -1] <- NA
+test_set[test_set == -1] <- NA
+
+cat_vars <- names(train_set)[grepl('_cat$', names(train_set))]
+
+train_set <- train_set %>%
+  mutate_at(.vars = cat_vars, .funs = as.factor)
+
+test_set <- test_set %>%
+  mutate_at(.vars = cat_vars, .funs = as.factor)
+```
+
+<br>
 
 # 시각화 
 
-## Target Feature Analysis
+## Target별 분포
+
+Target별 분포를 파악해보자.
 
 ```{r}
-# ggplot(data = train_set, aes(x = as.factor(target))) + 
-#     geom_bar(fill = '#84a5a3') + 
-#     labs(title = 'Distribution of Target Class (1 = claim filed)')
+ggplot(data = train_set, aes(x = as.factor(target))) +
+    geom_bar(fill = "#D9230F") +
+    labs(title = 'Target별 분포',
+         x = "Target", 
+         y = "Target 개수")
 ```
+
+<br>
 
 ## 결측치 파악
 
-```{r}
-data.frame(feature = names(dtrain), 
-           per_miss = map_dbl(dtrain, function(x) { sum(x == - 1) / length(x) })) %>%
-    ggplot(aes(x = reorder(feature, -per_miss), y = per_miss)) + 
-    geom_bar(stat = 'identity', color = 'white', fill = '#5a64cd') +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-    labs(x = '', y = '% missing', title = 'Missing Values by Feature') + 
-    scale_y_continuous(labels = scales::percent)
-```
+### 결측치 시각화
 
-## 상관 계수 파악 
+결측치의 비율을 시각화 해서 파악을 해보자. 59개의 컬럼중 단 몇개의 데이터만이 상당히 많은 비율의 결측치를 갖고 있음을 알 수 있다.
 
 ```{r}
-# Get features names that are not binary or categorical
-cont_vars <- names(dtrain)[!grepl("_cat|_bin", names(dtrain))]
-
-corrplot(cor(dtrain[, cont_vars][3:length(cont_vars)]), 
-         type = 'lower', 
-         col = colorRampPalette(c('#feeb8c', '#5a64cd'))(50),
-         tl.col = 'grey40',
-         mar = c(0,0,1,0),
-         title = 'Correlation Matrix of Continuous Features')
+data.frame(feature = names(train_set), 
+           per_miss = map_dbl(train_set, function(x) { sum(is.na(x)) / length(x) })) %>%
+  ggplot(aes(x = reorder(feature, per_miss), y = per_miss)) + 
+  geom_bar(stat = 'identity', color = 'white', fill = '#D9230F') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  coord_flip() +
+  labs(x = '', y = '결측치 비율 (%)', title = '컬럼별 결측치 비율') + 
+  scale_y_continuous(labels = scales::percent)
 ```
 
+### 결측치 테이블
+
+각 컬럼들의 결측치를 테이블로 좀 더 자세히 보도록 하자. 상위 10개만 뽑아서 확인해보면 다음과 같다. 
+
+```{r}
+missing_df <- data.frame(feature = names(train_set), 
+           per_miss = round(map_dbl(train_set, function(x) { sum(is.na(x)) / length(x) }) * 100,2)) %>% 
+  arrange(desc(per_miss)) %>% 
+  head(10)
+
+rownames(missing_df) <- NULL
+
+missing_df
+```
+
+<br>
+
+## 상관계수 파악
+
+### 상관계수 시각화
+
+각 데이터들간의 상관계수 plot을 그려 파악해보도록 하자. 데이터의 갯수가 상당히 많아서 테이블로 표시해도 큰 의미는 없으니 그래프를 통해 간단하게만 보도록 하자.
+
+```{r}
+train_set %>%
+  select(-starts_with("ps_calc"), -ps_ind_10_bin, -ps_ind_11_bin, -ps_car_10_cat, -id) %>%
+  mutate_at(vars(ends_with("cat")), funs(as.integer)) %>%
+  mutate_at(vars(ends_with("bin")), funs(as.integer)) %>%
+  mutate(target = as.integer(target)) %>%
+  cor(use="complete.obs", method = "spearman") %>%
+  corrplot(type="lower", tl.col = "black",  diag=FALSE)
+```
+
+<br>
 
 # 모델링
 
+## Train / Valid
+
+시각화까지 진행 했으니 이제 모델을 돌려보자. 우선 Training데이터를 Train / valid 데이터로 분류를 해서 테스트를 진행 해보자. 이후에 Test데이터로 평가를 진행 해보려 한다. <br>
+ 진행 하는데 있어 h2o모델을 돌리기 위해서는 데이터를 `as.h2o()`함수를 통해 형식을 h2o에 맞게 해주어야 하나보다.
+
 ```{r}
-# #Splitting Datasets into train and validation. I am taking 75% data. 
-# #I will use cross validation in next version.
-# set.seed(32)
-# 
-# # index <- createDataPartition(train_set[,"target"], p = 0.75, list = FALSE)
-# 
-# index <- sample(1:nrow(train_set), nrow(train_set) * 0.7)
-# 
-# tiny_train <- train_set[index, ]
-# train_val <- train_set[-index, ]
-# 
-# tiny_train.hex  <- as.h2o(tiny_train)
-# train_val.hex  <- as.h2o(train_val)
-# test.hex <- as.h2o(test_set)
-# 
-# 
-# # rm(train, tiny_train, train_val)
-# # gc()
-# 
-# # Preparing Target and predictors.
-# target <- "target"
-# predictors <- setdiff(names(tiny_train.hex), target)
+set.seed(32)
+index <- sample(1:nrow(train_set), nrow(train_set) * 0.7)
+
+tiny_train <- train_set[index, ]
+train_val <- train_set[-index, ]
+
+tiny_train.hex  <- as.h2o(tiny_train)
+train_val.hex  <- as.h2o(train_val)
+test.hex <- as.h2o(test_set)
+
+
+# rm(train, tiny_train, train_val)
+# gc()
+
+target <- "target"
+predictors <- setdiff(names(tiny_train.hex), target)
 ```
 
+## 모델 생성
+
+이제 이번 블로그의 핵심인 `h2o.automl()`함수를 사용해서 모델을 돌려보자. h2o.automl에 대해 자세한 사항은 다음을 참고 하자. 
+- 참고: [h2o로 모델링 해보기](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
 
 ```{r results="hide"}
-# # Let's run automl now.
-# automl_h2o_models <- h2o.automl(
-#   x = predictors, 
-#   y = target,
-#   training_frame    = tiny_train.hex,
-#   leaderboard_frame = train_val.hex,
-#   max_runtime_secs = 3000
-# )
-# 
-# automl_leader <- automl_h2o_models@leader
-# 
-# 
-# automl_h2o_models@leaderboard %>% 
-#     as.data.frame()
+automl_h2o_models <- h2o.automl(
+  x = predictors,
+  y = target,
+  training_frame    = tiny_train.hex,
+  leaderboard_frame = train_val.hex,
+  max_runtime_secs = 3000
+)
+
+automl_leader <- automl_h2o_models@leader
+
+
+# Predict on test set
+pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
+
+pred_conversion <- as.data.frame(pred_conversion)
+Submission <- cbind(test_set$id, pred_conversion)
+colnames(Submission) <- c("id", "target")
+write.csv(Submission, "Submission_AutoML.csv", row.names = F)
 ```
 
+# 총평 
 
-```{r}
-# # Predict on test set
-# pred_conversion <- h2o.predict(object = automl_leader, newdata = test.hex)
-# 
-# pred_conversion <- as.data.frame(pred_conversion)
-# Submission <- cbind(test_set$id, pred_conversion)
-# colnames(Submission) <- c("id", "target")
-# write.csv(Submission, "Submission_AutoML.csv", row.names = F)
-# 
-# # Any results you write to the current directory are saved as output.
-```
-
-# Score
+h2o.automl을 알게 되어 R에서 적용해볼 기회가 생겼다. <br>
+ 상당히 많은 난관이 있었는데 첫번째로는 h2o를 R에 재설치 하는것. 패키지가 설치 되어 있어서 정말 놀랐는데 기억을 더듬어 보니, 꽤 오래전에 h2o패키지를 설치 해두었던 적이 있었다. 그래서 오랜만에 실행을 했더니 버전 문제로 warning이 나와서 다시 설치를 하는데 많은 시간을 쏟았다. <br>
+ 그리고 h2o.automl이 무엇인지 자료 조사 해보는 과정. automl은 어딘가에서 듣기만 했고, h2o는 패키지를 설치 했던 기억만 있지, 이번에 하면서 너무도 생소했었다. r에서 h2o가 어떻게, automl은 또 어떻게 진행되는지 알아보는 시간이 꽤 오래 걸렸다. <br>
+ 마지막 난관인데, 이 기술들을 가지고 어떻게 써먹을 수 있을까? 하는 문제였다. 어느순간부터 교과서형 공부 하는것을 별로 안좋아하게 되었는데, 100의 공부를 하고 10정도를 실전에 쓰는 느낌? 그래서 이번에도 실전에는 어떻게 활용할 수 있을까 하다가 생각이 났던 것이 캐글. 캐글에서도 많은 자료가 없었고, 적당한 주제와 당장 내가 h2o.automl()로 할 수 있어 보이는 분류 데이터를 찾느라 시간이 많이 걸렸다. <br>
+ 정말 새로운 '그 무언가'를 해봤다. 어디서 듣기만 했다가 시작한것이 아니라 아예 처음부터 생소한 것들을 공부해가면서 이번 캐글 준비를 해봤는데, 이제 이런것을이 하나둘씩 쌓여가겠지.

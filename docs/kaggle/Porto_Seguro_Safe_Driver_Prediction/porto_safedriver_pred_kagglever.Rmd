@@ -28,13 +28,6 @@ library(caret)
 library(aws.s3)
 ```
 
-```{r echo = FALSE}
-# S3 버킷 접근을 위한 키값 설정
-Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIATYWKOXXJUQVLGIPK",
-           "AWS_SECRET_ACCESS_KEY" = "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",
-           "AWS_DEFAULT_REGION" = "ap-northeast-2")
-```
-
 <a style="display:scroll;position:fixed;bottom:10px;right:10px;" href="https://unfinishedgod.github.io/" title=”Home"><img
 src="https://img.icons8.com/cute-clipart/80/000000/home.png"></a>
 
@@ -43,17 +36,6 @@ AutoMLh2o를 사용해 캐글의 Porto Seguro’s Safe Driver Prediction를 분�
 
 
 
-# 참고
-
-이번에는
-
-- xwMOOC님 블로그: [순수 H2O AutoML](https://statkclee.github.io/model/model-h2o-automl.html)
-- BBSSDDSD Rpubs: [H2O 소개 및 간단한 사용법](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
-- 사자처럼 우아하게님 블로그: [Porto Seguro's Safe Driver Prediction 대회 소개 / 지니계수 란?](https://yseon99.tistory.com/55)
-- Troy Walters: [h2o AutoML](https://www.kaggle.com/captcalculator/h2o-automl)
-- Bhavesh Ghodasara: [AutoML(h2o) Trial](https://www.kaggle.com/bhavesh09/automl-h2o-trial)
-- http://docs.h2o.ai/h2o-tutorials/latest-stable/index.html
-- http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
 
 ```{r}
 h2o.init()
