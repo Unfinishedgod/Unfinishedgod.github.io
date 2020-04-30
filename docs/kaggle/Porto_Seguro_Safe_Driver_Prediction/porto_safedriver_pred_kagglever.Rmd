@@ -148,25 +148,25 @@ test_set <- test_set %>%
 
 # Visualization
 
-## Target별 분포
+## Target visualiztion
 
-Target별 분포를 파악해보자.
+Lets look at the target variable. 
 
 ```{r}
 ggplot(data = train_set, aes(x = as.factor(target))) +
     geom_bar(fill = "#D9230F") +
-    labs(title = 'Target별 분포',
+    labs(title = 'Distribution of Target Class',
          x = "Target", 
-         y = "Target 개수")
+         y = "Target Count")
 ```
 
 <br>
 
-## 결측치 파악
+## Missing value
 
-### 결측치 시각화
+### Missing value visualiztion
 
-결측치의 비율을 시각화 해서 파악을 해보자. 59개의 컬럼중 단 몇개의 데이터만이 상당히 많은 비율의 결측치를 갖고 있음을 알 수 있다.
+Lets look at the missing value ratio. Only a few of the 59 columns have significant missing values.
 
 ```{r}
 data.frame(feature = names(train_set), 
@@ -175,13 +175,13 @@ data.frame(feature = names(train_set),
   geom_bar(stat = 'identity', color = 'white', fill = '#D9230F') +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   coord_flip() +
-  labs(x = '', y = '결측치 비율 (%)', title = '컬럼별 결측치 비율') + 
+  labs(x = '', y = 'Missing value ratio(%)', title = 'Missing Value by Feature') + 
   scale_y_continuous(labels = scales::percent)
 ```
 
-### 결측치 테이블
+### Missing value table
 
-각 컬럼들의 결측치를 테이블로 좀 더 자세히 보도록 하자. 상위 10개만 뽑아서 확인해보면 다음과 같다. 
+Lets take a closer look at the missing values of each column at the table. If you select only the top 10 and check it, it is as follows.
 
 ```{r}
 missing_df <- data.frame(feature = names(train_set), 
@@ -196,9 +196,9 @@ missing_df
 
 <br>
 
-## 상관계수 파악
+## Correlation overview
 
-### 상관계수 시각화
+### Correlation visualization
 
 각 데이터들간의 상관계수 plot을 그려 파악해보도록 하자. 데이터의 갯수가 상당히 많아서 테이블로 표시해도 큰 의미는 없으니 그래프를 통해 간단하게만 보도록 하자.
 
