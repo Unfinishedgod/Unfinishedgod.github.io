@@ -89,6 +89,7 @@ ga('send', 'pageview');
 
 ## Kaggle
 
+- #### 2020-04-30 [Kaggle: Porto Seguro’s Safe Driver Prediction](/docs/kaggle/Porto_Seguro_Safe_Driver_Prediction/porto_safedriver_pred.html)
 - #### 2020-04-12 [Kaggle: Titanic](/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.html) 
 - #### 2020-03-22 [Kaggle Beginner Guide](docs/kaggle/Kaggle_beginner_guide/kaggle_beginner_guide.html) 
 - #### 2020-03-11 [Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
