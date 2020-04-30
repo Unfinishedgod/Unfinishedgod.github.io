@@ -69,19 +69,19 @@ In economics, the Gini coefficient, sometimes called the Gini index or Gini rati
 
 ## 데이터 파악
 
-- 각각의 컬럼은 다음과 같이 태그 되어 있다. 
+- Each column can be classified as follows.
   - ind, reg, car, calc
-- 컬럼 이름으로 데이터의 형식을 알 수 있는데 이는 다음과 같다. 
+- The format of the data can be determined by the column name as follows.
   - '_bin': Binary Features
   - '_cat': Categorical Features
   - 그외: Continuous 또는 Ordinal Features
-- -1은 Null(결측치)를 의미한다.
+- Values of -1 indicate that the feature was missing from the observation.
 
 <br>
 
-# 사전 준비
+# Preparation
 
-## 패키지 불러오기 & 데이터 로드
+## Packages & Data load
 
 ```{r}
 library(readr)
@@ -103,8 +103,7 @@ test_set <- read_csv("../input/porto-seguro-safe-driver-prediction/test.csv")
 
 ## H2O init
 
-h2o.init() 함수를 통해 h2o와 R을 연결 시켜준다. 연결을 시켜주면 다음과 같은 정보를 얻을 수 있다. 자세한 내용은 다음을 참고 하자.
-- 참고: [R과 h2o 연결하기](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
+First, connect h2o and R through the h2oinit() funcion.
 
 ```{r}
 h2o.init()
@@ -112,15 +111,15 @@ h2o.init()
 
 <br>
 
-## 데이터 해석 {.tabset}
+## Data structure {.tabset}
 
-### 데이터 구조
+### Data structure
 
 ```{r}
 str(train_set)
 ```
 
-### 데이터 요약정보
+### Data summary
 
 ```{r}
 summary(train_set)
@@ -128,9 +127,9 @@ summary(train_set)
 
 <br>
 
-# 데이터 전처리
+# Data Cleanging
 
-간단하게 전처리를 해보도록 하자. 앞서 말했듯이 -1로 되어 있는 데이터는 결측치 이므로 이는 `NA`로 변경 시켜 주자. 그리고 '_cat'인 컬럼은 모두 factor형식으로 바꿔 주도록 해준다.
+Lets do a data cleanging. As mentioned, the data in "-1" is missing value, so lets change it to NA. And the '_cat' column allows you to change it to a factor format.
 
 ```{r}
 train_set[train_set == -1] <- NA
@@ -147,7 +146,7 @@ test_set <- test_set %>%
 
 <br>
 
-# 시각화 
+# Visualization
 
 ## Target별 분포
 
