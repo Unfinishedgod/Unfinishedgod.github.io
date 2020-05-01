@@ -259,7 +259,8 @@ predictors <- setdiff(names(tiny_train.hex), target)
 ## 모델 생성
 
 이제 이번 블로그의 핵심인 `h2o.automl()`함수를 사용해서 모델을 돌려보자. h2o.automl에 대해 자세한 사항은 다음을 참고 하자.
-- 참고: [h2o로 모델링 해보기](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
+
+ - 참고: [h2o로 모델링 해보기](https://rpubs.com/BBSSDDSD/simple_h2o_intro_usage)
 
 ```{r results="hide"}
 automl_h2o_models <- h2o.automl(
@@ -281,6 +282,8 @@ Submission <- cbind(test_set$id, pred_conversion)
 colnames(Submission) <- c("id", "target")
 write.csv(Submission, "Submission_AutoML.csv", row.names = F)
 ```
+
+<br>
 
 # Score
 
