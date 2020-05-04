@@ -1,0 +1,58 @@
+---
+title: "[R] House Prices: Data Summary"
+author: "Uiyong Choi"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    highlight: textmate
+    theme: simplex
+    toc: true
+    toc_float: TRUE
+    code_folding: show
+    df_print: paged
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,  warning = FALSE, fig.width=10, fig.height = 8,  
+                      fig.align = "center")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readr)
+```
+
+```{r}
+domain <- "blog"
+if(domain == "blog") {
+  train_set <- read_csv("train.csv")
+  test_set <- read_csv("test.csv")
+} else {
+  train_set <- read_csv("../input/house-prices-advanced-regression-techniques/train.csv")
+  test_set <- read_csv("../input/house-prices-advanced-regression-techniques/test.csv")
+}
+```
+
+## Data Overview {.tabset}
+
+### Overview
+
+ Lets look at the data.
+
+### Data structure
+
+```{r}
+str(train_set)
+```
+
+### Data Summary
+
+```{r}
+summary(train_set)
+```
+
+
+
+
