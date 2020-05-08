@@ -81,7 +81,7 @@ ga('send', 'pageview');
 
 ## Tech set
 
-<!-- - #### 2020-05-06 [(Python)핸즈온 머신러닝 Chaper 2](docs/python/handson_ml_chapter2.html) -->
+- #### 2020-05-06 [(Python)핸즈온 머신러닝 Chaper 2](docs/python/handson_ml_chapter2.html)
 - #### 2020-03-15 [(R)대한민국 코로나 Dashboard](docs/flexdashboard_shiny/flexdashboard_shiny.html)
 - #### 2020-03-05 [(R)대한민국 코로나 바이러스 현황 파악](docs/corona/corona.html)
 - #### 2020-03-01 [(R)Github Commit Graph](docs/git_commit_vis/gg_vis.html)
