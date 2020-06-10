@@ -97,22 +97,6 @@ ga('send', 'pageview');
 <!-- - #### 2020-04-10 [Kaggle: House Prices: Advanced Regression Techniques](/docs/kaggle/house_prices_boston_regression/house_price_boston_regression.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"} -->
 
 <br>
-
-## News
-
-- #### 2020-03-17 [dplyr 버전 업데이트 리뷰](/docs/News/dplyr_1_0_0.html)
-- #### 2020-03-10 [ggplot2 버전 업데이트 리뷰](docs/News/ggplot2_330.html)
-
-<br>
-
-## AWS
-
-- #### 2020-04-24 [AWS Rstudio server 설치](/docs/aws/install_r/install_r.html) 
-- #### 2020-04-07 [AWS EC2 기능 설정](/docs/aws/setting_ec2/setting_ec2.html)
-- #### 2020-04-05 [AWS EC2 생성](/docs/aws/create_ec2/create_ec2.html) 
-
-
-
   </div>
   
   <div class = "col-md-2">
