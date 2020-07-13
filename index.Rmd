@@ -58,8 +58,6 @@ ga('send', 'pageview');
 
 <p align="center">
   <img src="Gareth_Frank_Bale_circle_index.png" width="120" height="120"> <br>
-  <font size= 3><b>우리 인간은 미완성의 신들이다.</b></font> <br>
-  <font size= 3><b>뛰어난 데이터 과학자를 꿈꾸는. 책을 좋아하는. 그런 사람입니다.</b></font>
 </p>
 
 
@@ -88,12 +86,6 @@ ga('send', 'pageview');
 
 <br>
 
-## Kaggle
-
-- #### 2020-04-30 [(R)Kaggle: Porto Seguro’s Safe Driver Prediction](/docs/kaggle/Porto_Seguro_Safe_Driver_Prediction/porto_safedriver_pred.html)![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"}
-- #### 2020-04-12 [(R)Kaggle: Titanic](/docs/kaggle/Titanic_Machine_Learning_from_Disaster/titanic.html) 
-- #### 2020-03-11 [(R)Kaggle: Bike Sharing Demand](docs/kaggle/bike_sharing_demand/Bike_Sharing_Demand.html)
-<!-- - #### 2020-04-10 [Kaggle: House Prices: Advanced Regression Techniques](/docs/kaggle/house_prices_boston_regression/house_price_boston_regression.html) ![](http://icons.iconarchive.com/icons/custom-icon-design/flatastic-4/256/New-icon.png){#id .class width="3%"} -->
 
 <br>
   </div>
