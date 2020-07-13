@@ -1,469 +1,0 @@
-── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
-✔ ggplot2 3.3.0           ✔ purrr   0.3.3      
-✔ tibble  2.1.3           ✔ dplyr   0.8.99.9000
-✔ tidyr   0.8.3           ✔ stringr 1.4.0      
-✔ ggplot2 3.3.0           ✔ forcats 0.4.0      
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-Type 'citation("pROC")' for a citation.
-
-Attaching package: ‘pROC’
-
-The following objects are masked from ‘package:stats’:
-
-    cov, smooth, var
-
-
-----------------------------------------------------------------------
-
-Your next step is to start H2O:
-    > h2o.init()
-
-For H2O package documentation, ask for help:
-    > ??h2o
-
-After starting H2O, you can use the Web UI at http://localhost:54321
-For more information visit http://docs.h2o.ai
-
-----------------------------------------------------------------------
-
-
-Attaching package: ‘h2o’
-
-The following object is masked from ‘package:pROC’:
-
-    var
-
-The following objects are masked from ‘package:stats’:
-
-    cor, sd, var
-
-The following objects are masked from ‘package:base’:
-
-    &&, %*%, %in%, ||, apply, as.factor, as.numeric, colnames,
-    colnames<-, ifelse, is.character, is.factor, is.numeric, log,
-    log10, log1p, log2, round, signif, trunc
-
-Loading required package: lattice
-
-Attaching package: ‘caret’
-
-The following object is masked from ‘package:purrr’:
-
-    lift
-
- Connection successful!
-
-R is connected to the H2O cluster: 
-    H2O cluster uptime:         41 minutes 12 seconds 
-    H2O cluster timezone:       Asia/Seoul 
-    H2O data parsing timezone:  UTC 
-    H2O cluster version:        3.30.0.1 
-    H2O cluster version age:    23 days  
-    H2O cluster name:           H2O_started_from_R_owen_psd693 
-    H2O cluster total nodes:    1 
-    H2O cluster total memory:   1.13 GB 
-    H2O cluster total cores:    2 
-    H2O cluster allowed cores:  2 
-    H2O cluster healthy:        TRUE 
-    H2O Connection ip:          localhost 
-    H2O Connection port:        54321 
-    H2O Connection proxy:       NA 
-    H2O Internal Security:      FALSE 
-    H2O API Extensions:         Amazon S3, XGBoost, Algos, AutoML, Core V3, TargetEncoder, Core V4 
-    R Version:                  R version 3.6.0 (2019-04-26) 
-
-List of 6
- $ Code     : chr "PermanentRedirect"
- $ Message  : chr "The bucket you are attempting to access must be addressed using the specified endpoint. Please send all future "| __truncated__
- $ Endpoint : chr "owentest.s3.amazonaws.com"
- $ Bucket   : chr "owentest"
- $ RequestId: chr "D2034A7B2F900B3A"
- $ HostId   : chr "Vg5ubQnGCBlGstzjaQIYneuRmR6e40RSlx6wGwLoimVp0291BIMgpbzY8lc3oJ2oyw1IN6qJ9bU="
- - attr(*, "headers")=List of 7
-  ..$ x-amz-bucket-region: chr "ap-northeast-2"
-  ..$ x-amz-request-id   : chr "D2034A7B2F900B3A"
-  ..$ x-amz-id-2         : chr "Vg5ubQnGCBlGstzjaQIYneuRmR6e40RSlx6wGwLoimVp0291BIMgpbzY8lc3oJ2oyw1IN6qJ9bU="
-  ..$ content-type       : chr "application/xml"
-  ..$ transfer-encoding  : chr "chunked"
-  ..$ date               : chr "Mon, 27 Apr 2020 02:06:38 GMT"
-  ..$ server             : chr "AmazonS3"
-  ..- attr(*, "class")= chr [1:2] "insensitive" "list"
- - attr(*, "class")= chr "aws_error"
-NULL
-Error in parse_aws_s3_response(r, Sig, verbose = verbose) : 
-  Moved Permanently (HTTP 301).
-Calls: s3read_using ... save_object -> s3HTTP -> parse_aws_s3_response -> <Anonymous>
-Execution halted
-── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
-✔ ggplot2 3.3.0           ✔ purrr   0.3.3      
-✔ tibble  2.1.3           ✔ dplyr   0.8.99.9000
-✔ tidyr   0.8.3           ✔ stringr 1.4.0      
-✔ ggplot2 3.3.0           ✔ forcats 0.4.0      
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-Type 'citation("pROC")' for a citation.
-
-Attaching package: ‘pROC’
-
-The following objects are masked from ‘package:stats’:
-
-    cov, smooth, var
-
-
-----------------------------------------------------------------------
-
-Your next step is to start H2O:
-    > h2o.init()
-
-For H2O package documentation, ask for help:
-    > ??h2o
-
-After starting H2O, you can use the Web UI at http://localhost:54321
-For more information visit http://docs.h2o.ai
-
-----------------------------------------------------------------------
-
-
-Attaching package: ‘h2o’
-
-The following object is masked from ‘package:pROC’:
-
-    var
-
-The following objects are masked from ‘package:stats’:
-
-    cor, sd, var
-
-The following objects are masked from ‘package:base’:
-
-    &&, %*%, %in%, ||, apply, as.factor, as.numeric, colnames,
-    colnames<-, ifelse, is.character, is.factor, is.numeric, log,
-    log10, log1p, log2, round, signif, trunc
-
-Loading required package: lattice
-
-Attaching package: ‘caret’
-
-The following object is masked from ‘package:purrr’:
-
-    lift
-
- Connection successful!
-
-R is connected to the H2O cluster: 
-    H2O cluster uptime:         42 minutes 37 seconds 
-    H2O cluster timezone:       Asia/Seoul 
-    H2O data parsing timezone:  UTC 
-    H2O cluster version:        3.30.0.1 
-    H2O cluster version age:    23 days  
-    H2O cluster name:           H2O_started_from_R_owen_psd693 
-    H2O cluster total nodes:    1 
-    H2O cluster total memory:   1.28 GB 
-    H2O cluster total cores:    2 
-    H2O cluster allowed cores:  2 
-    H2O cluster healthy:        TRUE 
-    H2O Connection ip:          localhost 
-    H2O Connection port:        54321 
-    H2O Connection proxy:       NA 
-    H2O Internal Security:      FALSE 
-    H2O API Extensions:         Amazon S3, XGBoost, Algos, AutoML, Core V3, TargetEncoder, Core V4 
-    R Version:                  R version 3.6.0 (2019-04-26) 
-
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=======                                                               |  10%  |                                                                              |=========                                                             |  12%  |                                                                              |=============                                                         |  18%  |                                                                              |===============                                                       |  22%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |==========================                                            |  38%  |                                                                              |===========================                                           |  38%  |                                                                              |============================                                          |  39%  |                                                                              |============================                                          |  40%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |==============================                                        |  44%  |                                                                              |===============================                                       |  44%  |                                                                              |===============================                                       |  45%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |=================================                                     |  48%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |===================================                                   |  51%  |                                                                              |====================================                                  |  51%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |=====================================                                 |  54%  |                                                                              |======================================                                |  54%  |                                                                              |======================================                                |  55%  |                                                                              |=======================================                               |  55%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  57%  |                                                                              |========================================                              |  58%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |==========================================                            |  61%  |                                                                              |===========================================                           |  61%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  62%  |                                                                              |============================================                          |  63%  |                                                                              |============================================                          |  64%  |                                                                              |=============================================                         |  64%  |                                                                              |=============================================                         |  65%  |                                                                              |==============================================                        |  65%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |===============================================                       |  68%  |                                                                              |================================================                      |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |=================================================                     |  71%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |===================================================                   |  72%  |                                                                              |===================================================                   |  73%  |                                                                              |===================================================                   |  74%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  76%  |                                                                              |======================================================                |  77%  |                                                                              |======================================================                |  78%  |                                                                              |=======================================================               |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  79%  |                                                                              |========================================================              |  80%  |                                                                              |========================================================              |  81%  |                                                                              |=========================================================             |  81%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |==========================================================            |  84%  |                                                                              |===========================================================           |  84%  |                                                                              |===========================================================           |  85%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |=============================================================         |  88%  |                                                                              |==============================================================        |  88%  |                                                                              |==============================================================        |  89%  |                                                                              |===============================================================       |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |===============================================================       |  91%  |                                                                              |================================================================      |  91%  |                                                                              |================================================================      |  92%  |                                                                              |=================================================================     |  92%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |==================================================================    |  95%  |                                                                              |===================================================================   |  95%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |====================================================================  |  98%  |                                                                              |===================================================================== |  98%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |==========================                                            |  37%  |                                                                              |====================================================                  |  74%  |                                                                              |======================================================================| 100%
-
-
-processing file: porto_safedriver_pred.Rmd
-  |                                                                         |                                                                 |   0%  |                                                                         |....                                                             |   7%
-   inline R code fragments
-
-  |                                                                         |.........                                                        |  13%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                         |.............                                                    |  20%
-  ordinary text without R code
-
-  |                                                                         |.................                                                |  27%
-label: unnamed-chunk-1
-── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
-✔ ggplot2 3.3.0           ✔ purrr   0.3.3      
-✔ tibble  2.1.3           ✔ dplyr   0.8.99.9000
-✔ tidyr   0.8.3           ✔ stringr 1.4.0      
-✔ ggplot2 3.3.0           ✔ forcats 0.4.0      
-── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-Type 'citation("pROC")' for a citation.
-
-Attaching package: 'pROC'
-
-The following objects are masked from 'package:stats':
-
-    cov, smooth, var
-
-
-----------------------------------------------------------------------
-
-Your next step is to start H2O:
-    > h2o.init()
-
-For H2O package documentation, ask for help:
-    > ??h2o
-
-After starting H2O, you can use the Web UI at http://localhost:54321
-For more information visit http://docs.h2o.ai
-
-----------------------------------------------------------------------
-
-
-Attaching package: 'h2o'
-
-The following object is masked from 'package:pROC':
-
-    var
-
-The following objects are masked from 'package:stats':
-
-    cor, sd, var
-
-The following objects are masked from 'package:base':
-
-    &&, %*%, %in%, ||, apply, as.factor, as.numeric, colnames,
-    colnames<-, ifelse, is.character, is.factor, is.numeric, log,
-    log10, log1p, log2, round, signif, trunc
-
-Loading required package: lattice
-
-Attaching package: 'caret'
-
-The following object is masked from 'package:purrr':
-
-    lift
-
-  |                                                                         |......................                                           |  33%
-  ordinary text without R code
-
-  |                                                                         |..........................                                       |  40%
-label: unnamed-chunk-2 (with options) 
-List of 1
- $ echo: logi FALSE
-
-  |                                                                         |..............................                                   |  47%
-  ordinary text without R code
-
-  |                                                                         |...................................                              |  53%
-label: unnamed-chunk-3
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-  |                                                                         |.......................................                          |  60%
-  ordinary text without R code
-
-  |                                                                         |...........................................                      |  67%
-label: unnamed-chunk-4
-  |                                                                         |................................................                 |  73%
-  ordinary text without R code
-
-  |                                                                         |....................................................             |  80%
-label: unnamed-chunk-5
-  |                                                                         |........................................................         |  87%
-  ordinary text without R code
-
-  |                                                                         |.............................................................    |  93%
-label: unnamed-chunk-6
-  |                                                                         |.................................................................| 100%
-  ordinary text without R code
-
-
-output file: porto_safedriver_pred.knit.md
-
-/usr/lib/rstudio-server/bin/pandoc/pandoc +RTS -K512m -RTS porto_safedriver_pred.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output /home/owen/Unfinishedgod.github.io/docs/kaggle/Porto_Seguro_Safe_Driver_Prediction/porto_safedriver_pred.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --variable 'theme:simplex' --include-in-header /tmp/Rtmp10ZLxq/rmarkdown-str711d3f7552d9.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
-
-Output created: porto_safedriver_pred.html
-
-
-processing file: porto_safedriver_pred.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
-   inline R code fragments
-
-  |                                                                              |......                                                                |   8%
-label: setup (with options) 
-List of 1
- $ include: logi FALSE
-
-  |                                                                              |........                                                              |  12%
-  ordinary text without R code
-
-  |                                                                              |...........                                                           |  16%
-label: unnamed-chunk-1
-── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
-✔ ggplot2 3.3.0           ✔ purrr   0.3.4      
-✔ tibble  3.0.1           ✔ dplyr   0.8.99.9000
-✔ tidyr   1.0.2           ✔ stringr 1.4.0      
-✔ ggplot2 3.3.0           ✔ forcats 0.4.0      
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-Type 'citation("pROC")' for a citation.
-
-Attaching package: 'pROC'
-
-The following objects are masked from 'package:stats':
-
-    cov, smooth, var
-
-
-----------------------------------------------------------------------
-
-Your next step is to start H2O:
-    > h2o.init()
-
-For H2O package documentation, ask for help:
-    > ??h2o
-
-After starting H2O, you can use the Web UI at http://localhost:54321
-For more information visit http://docs.h2o.ai
-
-----------------------------------------------------------------------
-
-
-Attaching package: 'h2o'
-
-The following object is masked from 'package:pROC':
-
-    var
-
-The following objects are masked from 'package:stats':
-
-    cor, sd, var
-
-The following objects are masked from 'package:base':
-
-    &&, %*%, %in%, ||, apply, as.factor, as.numeric, colnames,
-    colnames<-, ifelse, is.character, is.factor, is.numeric, log,
-    log10, log1p, log2, round, signif, trunc
-
-Loading required package: lattice
-
-Attaching package: 'caret'
-
-The following object is masked from 'package:purrr':
-
-    lift
-
-corrplot 0.84 loaded
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-Warning: 1 parsing failure.
-   row col   expected     actual                        file
-594890  -- 59 columns 28 columns '/home/owen/file/train.csv'
-
-Parsed with column specification:
-cols(
-  .default = col_double()
-)
-See spec(...) for full column specifications.
-  |                                                                              |..............                                                        |  20%
-  ordinary text without R code
-
-  |                                                                              |.................                                                     |  24%
-label: unnamed-chunk-2
-  |                                                                              |....................                                                  |  28%
-  ordinary text without R code
-
-  |                                                                              |......................                                                |  32%
-label: unnamed-chunk-3
-  |                                                                              |.........................                                             |  36%
-  ordinary text without R code
-
-  |                                                                              |............................                                          |  40%
-label: unnamed-chunk-4
-  |                                                                              |...............................                                       |  44%
-  ordinary text without R code
-
-  |                                                                              |..................................                                    |  48%
-label: unnamed-chunk-5
-  |                                                                              |....................................                                  |  52%
-  ordinary text without R code
-
-  |                                                                              |.......................................                               |  56%
-label: unnamed-chunk-6
-  |                                                                              |..........................................                            |  60%
-  ordinary text without R code
-
-  |                                                                              |.............................................                         |  64%
-label: unnamed-chunk-7
-  |                                                                              |................................................                      |  68%
-  ordinary text without R code
-
-  |                                                                              |..................................................                    |  72%
-label: unnamed-chunk-8
-  |                                                                              |.....................................................                 |  76%
-  ordinary text without R code
-
-  |                                                                              |........................................................              |  80%
-label: unnamed-chunk-9
-  |                                                                              |...........................................................           |  84%
-  ordinary text without R code
-
-  |                                                                              |..............................................................        |  88%
-label: unnamed-chunk-10
-  |                                                                              |................................................................      |  92%
-  ordinary text without R code
-
-  |                                                                              |...................................................................   |  96%
-label: unnamed-chunk-11 (with options) 
-List of 1
- $ results: chr "hide"
-
-  |                                                                              |......................................................................| 100%
-  ordinary text without R code
-
-
-output file: porto_safedriver_pred.knit.md
-
-/usr/lib/rstudio-server/bin/pandoc/pandoc +RTS -K512m -RTS porto_safedriver_pred.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash+smart --output /home/owen/Unfinishedgod.github.io/docs/kaggle/Porto_Seguro_Safe_Driver_Prediction/porto_safedriver_pred.html --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_collapsed=1 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --number-sections --variable 'theme:simplex' --include-in-header /tmp/Rtmprta73X/rmarkdown-str119c77f04078.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --lua-filter /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /home/owen/R/x86_64-redhat-linux-gnu-library/3.6/rmarkdown/rmd/lua/latex-div.lua --variable code_folding=show --variable code_menu=1 
-
-Output created: porto_safedriver_pred.html
-Warning message:
-`funs()` is deprecated as of dplyr 1.0.0.
-Please use a list of either functions or lambdas: 
-
-  # Simple named list: 
-  list(mean = mean, median = median)
-
-  # Auto named with `tibble::lst()`: 
-  tibble::lst(mean, median)
-
-  # Using lambdas
-  list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-This warning is displayed once every 8 hours.
-Call `lifecycle::last_warnings()` to see where this warning was generated. 
